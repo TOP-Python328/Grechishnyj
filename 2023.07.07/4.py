@@ -2,9 +2,7 @@
 num = int(input("Введите трёхзначное число: "))
 digit_1, digit_2, digit_3 = num // 100, num % 100 // 10, num % 10
 # ИСПРАВИТЬ: лучше одна генерация f-строки, чем две
-print(f'Сумма цифр = {digit_1 + digit_2 + digit_3}',
-      f'Произведение цифр = {digit_1 * digit_2 * digit_3}',
-      sep='\n')
+print(f'Сумма цифр = {digit_1 + digit_2 + digit_3},\nПроизведение цифр = {digit_1 * digit_2 * digit_3}')
 
 
 # Введите трёхзначное число: 333

@@ -1,8 +1,6 @@
 num_1, num_2 = int(input('Число 1: ')), int(input('Число 2: '))
  
-if not num_2:
-    print('на ноль делить нельзя')
-elif num_1 % num_2:
+if num_1 % num_2:
     print(f'{num_1} не делится на {num_2} нацело\n'
           f'неполное частное: {num_1 // num_2}\n'
           f'остаток: {num_1 % num_2}')

@@ -1,8 +1,7 @@
 numbers = list()
 
 while True:
-    num = int(input('Введите число, кратное 7: '))
-    if num % 7:
+    if (num := int(input('Введите число, кратное 7: '))) % 7:
         break
     else:
         numbers.insert(0, num) 

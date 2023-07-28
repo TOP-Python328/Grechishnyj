@@ -1,7 +1,5 @@
 numbers = int(input('stdin: '))
-
-num_1, num_2 = 1, 1
-
+num_1 = num_2 = 1
 sequence = list()
 
 for _ in range(numbers):

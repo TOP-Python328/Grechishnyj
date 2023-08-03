@@ -51,7 +51,7 @@ for dictionary in list_of_dicts:
         union_dict[key].add(value)
         
 
-print(*(f'\'{key}\': {value}'for key, value in union_dict.items()), sep=',\n')
+print(*(f'\'{key}\': {value}' for key, value in union_dict.items()), sep=',\n')
 
 # 'Барнаул': {1, 4},
 # 'Владивосток': {1, 3},

@@ -5,6 +5,7 @@ number_right = [int(n) for n in number[3:]]
 
 print('Счастливый:', 'да' if sum(number_left) == sum(number_right) else 'нет')
 
+
 # Номер билета: 192837
 # Счастливый: нет
 
@@ -16,3 +17,6 @@ print('Счастливый:', 'да' if sum(number_left) == sum(number_right) e
 
 # Номер билета: 115223
 # Счастливый: да
+
+
+# ИТОГ: отлично — 3/3

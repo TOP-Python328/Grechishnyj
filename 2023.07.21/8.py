@@ -8,7 +8,8 @@ for _ in range(numbers):
     
 print('stdout: ', end='')
 print(*sequence)
-    
+
+
 # stdin: 1
 # stdout: 1
 
@@ -17,3 +18,6 @@ print(*sequence)
 
 # stdin: 17
 # stdout: 1 1 2 3 5 8 13 21 34 55 89 144 233 377 610 987 1597
+
+
+# ИТОГ: отлично — 5/5

@@ -1,11 +1,7 @@
 fruits = list()
 
-while True:
-    fruit = input('Введите название фрукта: ')
-    if not fruit:
-        break
-    else:
-        fruits.append(fruit) 
+while fruit := input('Введите название фрукта: '):
+    fruits.append(fruit) 
 
 fruits_format = ', '.join(fruits[:-1]) + ' и ' + fruits[-1] if len(fruits) > 1 else fruits[0]
 

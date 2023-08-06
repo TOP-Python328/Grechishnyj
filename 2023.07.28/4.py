@@ -5,9 +5,9 @@ while inp := input(' item > '):
 
 find_val = input(' find > ')
 show_msg = '! value error !'
-for item in my_dict.items():   
-    if find_val == item[1]:
-        show_msg = item[0]
+for key, value in my_dict.items():   
+    if find_val == value:
+        show_msg = key
         break
         
 print(' msg ', show_msg)

@@ -41,15 +41,13 @@ list_of_dicts = [
     }
 ]
 
-
 union_dict = {}
 
 for dictionary in list_of_dicts:
     for key, value in dictionary.items():
         if not key in union_dict:
             union_dict[key] = set()
-        union_dict[key].add(value)
-        
+        union_dict[key].add(value)       
 
 print(*(f'\'{key}\': {value}' for key, value in union_dict.items()), sep=',\n')
 

@@ -10,12 +10,12 @@ scores_letters = {
 }
 
 
-word = input()
+word = input().upper()
 score = 0
 
 for char in word:
     for key, value in scores_letters.items():
-        if char.upper() in value:
+        if char in value:
             score += key
 
 print(score)

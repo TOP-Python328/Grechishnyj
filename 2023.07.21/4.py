@@ -3,9 +3,7 @@ numbers = list()
 
 # ПЕРЕИМЕНОВАТЬ: имена переменных i, j, k традиционно используются только для индексов — здесь вы работаете с произвольными числами
 for num in range(num_first, num_first*10):
-    if ((not num % 2 or not num % 3 or not num % 5 or not num % 7 or
-        not num % 11 or not num % 13 or not num % 17 or not num % 19) 
-        and num not in [2, 3, 5, 7, 11, 13, 17, 19] or num == 1):
+    if ((not num % 2 or not num % 3) and num not in [2, 3] or num == 1):
         continue
     numbers.append(num)
 
@@ -16,7 +14,7 @@ for num in numbers:
     cnt = 0
     # ПЕРЕИМЕНОВАТЬ: имена переменных i, j, k традиционно используются только для индексов — здесь вы работаете с делителем
     # ИСПРАВИТЬ: используйте более оптимальные алгоритм и диапазон для поиска делителей из предыдущей задачи — в данной задаче это ещё более актуально
-    for divisor in range(2, num // 2):
+    for divisor in range(5, num // 2):
         if not num % divisor:
             cnt += 1
             break

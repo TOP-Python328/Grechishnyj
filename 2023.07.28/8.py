@@ -1,5 +1,3 @@
-# files_str = '1.py; 1.py; src.tar.gz; aux.h; main.cpp; functions.h; main.cpp; 1.py; main.py; src.tar.gz'
-
 files_list = sorted(input().split('; '))
 files_data = {file:files_list.count(file) for file in files_list}
 files_save = list()

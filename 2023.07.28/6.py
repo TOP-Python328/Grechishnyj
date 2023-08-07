@@ -7,7 +7,6 @@ message = 'да' if true_set and true_prefix else 'нет'
 
 print(message)
 
-
 # 10111
 # да
 

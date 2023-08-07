@@ -1,13 +1,18 @@
 files_list = sorted(input().split('; '))
-files_data = {file:files_list.count(file) for file in files_list}
+files_data = {file: files_list.count(file) for file in files_list}
 files_save = list()
 
 for key, value in files_data.items():
     files_save.append(key)
-    for i in range(2, value + 1):
-        files_save.append(f'{key[:key.index(".")]}_{i}{key[key.index("."):]}')
+    # КОММЕНТАРИЙ: хорошо, что обошлись range(), без явных проверок значения value
+    # ПЕРЕИМЕНОВАТЬ: счётчик — counter, cnt
+    for cnt in range(2, value+1):
+        # ИСПОЛЬЗОВАТЬ: оптимизацию количества операций со строками
+        i_dot = key.index(".")
+        files_save.append(f'{key[:i_dot]}_{cnt}{key[i_dot:]}')
     
 print(*files_save, sep='\n')
+
 
 # 1.py; 1.py; src.tar.gz; aux.h; main.cpp; functions.h; main.cpp; 1.py; main.py; src.tar.gz
 # 1.py
@@ -32,3 +37,6 @@ print(*files_save, sep='\n')
 # img.png
 # index.html
 # index_2.html
+
+
+# ИТОГ: очень хорошо — 5/6

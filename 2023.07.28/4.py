@@ -1,5 +1,6 @@
 my_dict = dict()
 
+# ИСПРАВИТЬ: разбивку на подстроки лучше выполнить здесь же, чтобы потом два раза не вставать
 while inp := input(' item > '):
     my_dict[int(inp.split()[0])] = inp.split()[1]
 
@@ -9,7 +10,7 @@ for key, value in my_dict.items():
     if find_val == value:
         show_msg = key
         break
-        
+
 print(' msg ', show_msg)
 
 
@@ -51,3 +52,6 @@ print(' msg ', show_msg)
 # item >
 # find > ER_CANT_CREATE_DB
 # msg  ! value error !
+
+
+# ИТОГ: очень хорошо — 3/4

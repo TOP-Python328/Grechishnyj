@@ -42,14 +42,17 @@ list_of_dicts = [
 ]
 
 union_dict = {}
-
 for dictionary in list_of_dicts:
     for key, value in dictionary.items():
-        if not key in union_dict:
-            union_dict[key] = set()
-        union_dict[key].add(value)       
+        # if not key in union_dict:
+        #     union_dict[key] = set()
+        # union_dict[key].add(value)
+        # ИСПОЛЬЗОВАТЬ: вместо явной проверки наличия ключа лучше воспользоваться словарным методом setdefault()
+        union_dict.setdefault(key, set()).add(value)
 
-print(*(f'\'{key}\': {value}' for key, value in union_dict.items()), sep=',\n')
+# ИСПОЛЬЗОВАТЬ: синтаксис f-строк для машиночитаемого строкового представления
+print(*(f'{key!r}: {value}' for key, value in union_dict.items()), sep=',\n')
+
 
 # 'Барнаул': {1, 4},
 # 'Владивосток': {1, 3},
@@ -70,3 +73,6 @@ print(*(f'\'{key}\': {value}' for key, value in union_dict.items()), sep=',\n')
 # 'Тольятти': {1, 2},
 # 'Екатеринбург': {6},
 # 'Оренбург': {3}
+
+
+# ИТОГ: отлично — 4/4

@@ -1,11 +1,11 @@
 string = input() 
 
+# ИСПРАВИТЬ: лучше сравнить множества — это быстрее, эффективнее по памяти (не создаётся новое множество) и очевиднее
 true_set = not len(set(string) - {'b', '0', '1'})
 true_prefix = string[:2] == '0b' or string[:1] == 'b' or 'b' not in string
 
-message = 'да' if true_set and true_prefix else 'нет'
+print('да' if true_set and true_prefix else 'нет')
 
-print(message)
 
 # 10111
 # да
@@ -27,3 +27,6 @@ print(message)
 
 # 2b101011
 # нет
+
+
+# ИТОГ: очень хорошо — 3/4

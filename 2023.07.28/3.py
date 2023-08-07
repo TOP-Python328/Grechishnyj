@@ -17,7 +17,6 @@ for i in range(len(li_1) - len(li_2)):
         
 print(msg)
 
-
 # 1
 # 
 # да

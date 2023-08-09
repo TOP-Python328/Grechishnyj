@@ -6,10 +6,10 @@ for key, value in files_data.items():
     files_save.append(key)
     # КОММЕНТАРИЙ: хорошо, что обошлись range(), без явных проверок значения value
     # ПЕРЕИМЕНОВАТЬ: счётчик — counter, cnt
-    for cnt in range(2, value+1):
+    for counter in range(2, value+1):
         # ИСПОЛЬЗОВАТЬ: оптимизацию количества операций со строками
         i_dot = key.index(".")
-        files_save.append(f'{key[:i_dot]}_{cnt}{key[i_dot:]}')
+        files_save.append(f'{key[:i_dot]}_{counter}{key[i_dot:]}')
     
 print(*files_save, sep='\n')
 

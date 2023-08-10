@@ -10,17 +10,19 @@ scores_letters = {
 }
 
 # ИСПРАВИТЬ: забыли о букве 'ё' (см. тест ниже)
-word = input().upper()
-
-score = 0
-for char in word:
-    for key, value in scores_letters.items():
-        if char in value:
-            score += key
-print(score)
-
 # КОММЕНТАРИЙ: а ещё можно (и даже нужно) один раз в начале работы приложения создать на основе scores_letters новый словарь с ключами буквами и значениями очками — тогда подсчёт очков за слово (который потенциально в процессе игры выполняется многократно) будет проще и быстрее
 
+letters_scores = {}
+
+for key, value in scores_letters.items():
+    for char in value:
+        letters_scores[char] = key
+        if char == 'Е':
+            letters_scores['Ё'] = key
+
+word = input().upper()
+
+print(sum(letters_scores[char] for char in word))
 
 # синхрофазатрон
 # 29
@@ -37,6 +39,9 @@ print(score)
 # её
 # КОММЕНТАРИЙ: должно быть 2
 # 1
+
+# её
+# 2
 
 
 # ИТОГ: хорошо, немного доработать — 3/4

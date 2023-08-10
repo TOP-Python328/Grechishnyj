@@ -1,8 +1,8 @@
 my_dict = dict()
 
 # ИСПРАВИТЬ: разбивку на подстроки лучше выполнить здесь же, чтобы потом два раза не вставать
-while inp := input(' item > '):
-    my_dict[int(inp.split()[0])] = inp.split()[1]
+while inp := input(' item > ').split():
+    my_dict[int(inp[0])] = inp[1]
 
 find_val = input(' find > ')
 show_msg = '! value error !'

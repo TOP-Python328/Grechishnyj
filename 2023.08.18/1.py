@@ -16,7 +16,7 @@ def strong_password(password: str) -> bool:
             cheker['lat_upper'] += 1
         if simbol >= 97 and simbol <= 122:
             cheker['lat_lower'] += 1
-        if char in ',./<>?;\':\"-_=+()[]*&^%$#@':
+        if char in ' ,./<>?;\':\"-_=+()[]*&^%$#@':
             cheker['punctuation'] +=1
         if char.isdigit():
             cheker['digits'] +=1

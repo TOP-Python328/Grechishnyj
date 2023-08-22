@@ -34,3 +34,13 @@ def taxi_cost(distanse: int, wait_time: int=0) -> int | None:
 
 # >>> taxi_cost(wait_time=5)
 # TypeError: taxi_cost() missing 1 required positional argument: 'distanse'
+
+# Вызов специальных атрибутов
+# >>> taxi_cost.__name__
+# 'taxi_cost'
+# >>> taxi_cost.__doc__
+# 'Функция вычисляет и возвращает значение стоимости поезки в такси'
+# >>> taxi_cost.__annotations__
+# {'distanse': <class 'int'>, 'wait_time': <class 'int'>, 'return': int | None}
+# >>> taxi_cost.__defaults__
+# (0,)

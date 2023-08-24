@@ -52,7 +52,7 @@ def int_base(number: str, start_base: int, end_base: int) -> str | None:
         Функция преобразовывает число из произвольной системы счисления в произвольную
         Использует:
         def int_decimal - для преобразования произвольного числа в десятичную систему счисления
-        def int_instaled - для преоразования десятичного дисла в произвольную систему счисления
+        def int_instaled - для преобразования десятичного числа в произвольную систему счисления
     """
     if start_base < 2 or start_base > 36 or end_base < 2 or end_base > 36:
         return None

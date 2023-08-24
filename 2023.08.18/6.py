@@ -4,7 +4,7 @@ def orth_triangle(
         cathetus2: float = 0,
         hipotenuse: float = 0
     ) -> float | None:
-    """Функция вычисяет третью сторону прямоугольного треуголька по двум переданным"""
+    """Функция вычисяет третью сторону прямоугольного треугольника по двум переданным"""
     
     if (cathetus1 and cathetus2 and hipotenuse
         or cathetus1 > hipotenuse and hipotenuse

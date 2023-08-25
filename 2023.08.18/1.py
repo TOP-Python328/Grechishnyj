@@ -11,10 +11,10 @@ def strong_password(password: str) -> bool:
         }
     
     for char in password:
-        simbol = ord(char)
-        if simbol >= 65 and simbol <= 90:
+        symbol = ord(char)
+        if symbol >= 65 and symbol <= 90:
             cheker['lat_upper'] += 1
-        if simbol >= 97 and simbol <= 122:
+        if symbol >= 97 and symbol <= 122:
             cheker['lat_lower'] += 1
         if char in ' ,./<>?;\':\"-_=+()[]*&^%$#@':
             cheker['punctuation'] +=1

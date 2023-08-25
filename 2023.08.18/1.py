@@ -25,7 +25,7 @@ def strong_password(password: str) -> bool:
         return False
         
     for value in cheker.values():
-        if not bool(value):
+        if not value:
             return False
     else:
         return True

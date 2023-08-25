@@ -5,19 +5,19 @@ def generate_system_dict() -> dict[str, int]:
     """
     system_dict = {}
     for value in range(36):
-        key = str(value if value < 10 else chr(value + 55)).lower()
-        system_dict[str(key)] = value
+        key = str(value if value < 10 else chr(value + 87))
+        system_dict[key] = value
     return system_dict
 
 system_dict = generate_system_dict()
 
-def find_key(name_dict: dict, val_dict: int) -> int | None:
+def find_key(name_dict: dict, inp_value: int) -> int | None:
     """
         Функция осуществляет поиск и возвращает ключ элемента 
         по значению элемента
     """
     for key, value in name_dict.items():
-        if value == val_dict:
+        if value == inp_value:
             return key
     else:
         return None
@@ -27,7 +27,6 @@ def int_decimal(str_num: str, base: int) -> int | None:
         Функция преобразовывает число из произвольной системы счисления
         в десятичную систему счисления 
     """
-    
     reverse_num = str_num[::-1]
     decimal_num = 0
     power_num = 0

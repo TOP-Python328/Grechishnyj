@@ -31,3 +31,10 @@ def numbers_strip(numbers: list[float], n: int=1, *, copy=False) -> list:
 # [10.3, 2.15]
 # >>> sample is sample_stripped
 # False
+
+# >>> sample = [1, 2, 3, 4, 5, 6, 7]
+# >>> sample_stripped = numbers_strip(sample, 3, copy=True)
+# >>> sample_stripped
+# [4]
+# >>> sample is sample_stripped
+# False

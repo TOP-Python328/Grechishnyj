@@ -13,8 +13,6 @@ def countable_nouns(num: int, choice_words: tuple[str, str, str]) -> str:
     else:
         return choice_words[2]
 
-
-
 # >>> countable_nouns(1, ('год', 'года', 'лет'))
 # 'год'
 # >>> countable_nouns(2, ('год', 'года', 'лет'))

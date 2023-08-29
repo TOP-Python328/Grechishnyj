@@ -11,7 +11,7 @@ def generate_system_dict() -> dict[str, int]:
 
 system_dict = generate_system_dict()
 
-def find_key(name_dict: dict, inp_value: int) -> int | None:
+def find_key(name_dict: dict, inp_value: int) -> str | None:
     """
         Функция осуществляет поиск и возвращает ключ элемента 
         по значению элемента

@@ -1,4 +1,4 @@
-def pick_resistiors(resistance: int) -> dict[str, tuple[int]] | None:
+def pick_resistors(resistance: int) -> dict[str, tuple[int]] | None:
     """Функция подбирает ближайшие к переданному номиналы сопротивления из всех рядов сопротивлений"""
     nominals = {
         'E6': (

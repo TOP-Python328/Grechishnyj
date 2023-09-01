@@ -22,12 +22,11 @@ def repeat(num) -> 'function':
 # Hi World!
 # Hi World!
 # >>>
-# >>> @repeat(8)
+# >>> @repeat(7)
 # ... def print_hi(s):
 # ...     print(s)
 # ...
 # >>> print_hi('Python decorators!')
-# Python decorators!
 # Python decorators!
 # Python decorators!
 # Python decorators!

@@ -38,5 +38,20 @@ def pick_resistors(resistance: int) -> dict[str, tuple[int]] | None:
         differenses = tuple(abs(item - resistance) for item in value)
         find_resistances = (value[i] for i in range(len(differenses)) if differenses[i] == min(differenses))
         dict_resistances[key] = tuple(find_resistances)
-    # print(dict_resistances)
+        
     return dict_resistances
+    
+# >>> pick_resistors(112)
+# {'E6': (100,), 'E12': (120,), 'E24': (110,), 'E48': (110,), 'E96': (113,)}
+
+# >>> pick_resistors(549)
+# {'E6': (470,), 'E12': (560,), 'E24': (560,), 'E48': (536, 562), 'E96': (549,)}
+
+# >>> pick_resistors(200)
+# {'E6': (220,), 'E12': (180, 220), 'E24': (200,), 'E48': (196,), 'E96': (200,)}
+
+# >>> pick_resistors(300)
+# {'E6': (330,), 'E12': (270, 330), 'E24': (300,), 'E48': (301,), 'E96': (301,)}
+
+# >>> print(pick_resistors(1))
+# None

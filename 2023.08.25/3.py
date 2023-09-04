@@ -1,9 +1,7 @@
 def math_function_resolver(
-        math_func: 'function', 
-        /, 
+        math_func: 'function', /, 
         x_main: int | float, 
         *x_args: int | float, 
-        # *, - получаем ошибку SyntaxError: * argument may appear only once
         strings: bool=False
     ) -> list[float | str]:
     """

@@ -3,6 +3,7 @@ def logger(func_obj: 'function') -> 'function':
     
     def wrapper(*args, **kwargs):
         """Функция-обертка, вызывает декорируемую функцию"""
+        
         kwargs_default = dict(zip(reversed(func_obj.__code__.co_varnames),reversed(func_obj.__defaults__)))
         kwargs_update = kwargs_default | dict(reversed(tuple(kwargs.items())))
 

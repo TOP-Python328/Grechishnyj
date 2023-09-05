@@ -1,11 +1,13 @@
 from utils import important_message
 
-def main() -> str:
+def main() -> None:
     """
         Функция принимает сообщение от пользователя и выводит его в консоль в форматированном виде.
         Для форматирования используется импортированная функция important_message()
     """
     print(important_message(input('текст сообщения: ')))
+    
+    return None
     
 
 # >>> main()

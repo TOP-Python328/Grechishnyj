@@ -18,9 +18,8 @@ def search_context(keyword: str, *key_words: str, n: int=0) -> list[dict]:
         
         with open(file, 'r', encoding='utf-8') as file_content:
             text_content = file_content.read()
-            
-        text = clear_text(text_content)    
-        lines = text.split('\n')
+                    
+        lines = text_content.split('\n')
         filename = file.name
         number_line = 1
         
@@ -28,13 +27,13 @@ def search_context(keyword: str, *key_words: str, n: int=0) -> list[dict]:
             words = line.split(' ')
             
             for word in words:
-                if word.lower() in kws:
+                if clear_text(word.lower()) in kws:
                     data_list.append({
                         'keyword': word,
                         'filename': filename,
                         'line': number_line,
                         'context': n,
-                        'text': f'{line[:10]}... ...{line[-10:]}'
+                        'text': f'{line[:15]}... ...{line[-15:]}'
                     })
             
             number_line += 1

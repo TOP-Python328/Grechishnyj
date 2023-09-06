@@ -1,4 +1,6 @@
-from shutil import get_terminal_size
+from shutil import get_terminal_size, copy2
+from pathlib import Path
+from sys import path, modules
 
 def important_message(text: str) -> str:
     """Функция возвращает форматированную строку сообщения в рамке по ширине CLI"""
@@ -39,16 +41,41 @@ def important_message(text: str) -> str:
             char_spot
         )
             
-    text_main += (empt_line+ bord_line)
+    text_main += (empt_line + bord_line)
     return text_main
     
+    # >>> important_message('Функция возвращает форматированную строк
+    # у сообщения в рамке по ширине CLI')
+    # '#=============================================================
+    # ##                                                             
+    # ##  Функция возвращает форматированную строку сообщения в рам  
+    # ##                      ке по ширине CLI                       
+    # ##                                                             
+    # ##=============================================================
+    # #'
+
+def load_file(file_path: str | Path) -> Path:
+    """
+        Функция копирует файл в каталог задания
+        Возвращает объект скопированного модуля
+    """
     
-# >>> important_message('Функция возвращает форматированную строк
-# у сообщения в рамке по ширине CLI')
-# '#=============================================================
-# ##                                                             
-# ##  Функция возвращает форматированную строку сообщения в рам  
-# ##                      ке по ширине CLI                       
-# ##                                                             
-# ##=============================================================
-# #'
+    copy_name = 'copy_' + file_path.name
+    path_out = Path(path[0]) / copy_name
+    copy2(file_path, path_out)
+
+    return path_out
+    
+
+    # ============================================================
+    # Первый вариант копирования - менеджер контекста
+    
+    # with open(file_path, 'r', encoding='utf-8') as file_content:
+    #     text = file_content.read()
+    
+    # with open(r'D:\temp\home\2023.09.03\copy2.py', 'w', encoding='utf-8') as file_out:
+    #     file_out.write(text)
+    # ============================================================
+
+    
+    

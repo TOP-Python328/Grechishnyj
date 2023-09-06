@@ -1,9 +1,9 @@
+from pathlib import Path
+from sys import path
+
 def list_files(catalog_path: str) -> tuple[str] | None:
     """Функция возвращает кортеж с именами файлов по переданному пути"""
-    
-    from pathlib import Path
-    from sys import path
-    
+   
     catalog = Path(path[0]) / catalog_path
   
     try:

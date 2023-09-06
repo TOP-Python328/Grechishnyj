@@ -77,5 +77,30 @@ def load_file(file_path: str | Path) -> Path:
     #     file_out.write(text)
     # ============================================================
 
+
+def clear_text(text_fragment: str) -> str:
+    """docstring"""
+    
+    text_clear = ''
+    punctuations = '.,;:/?<>«»"\'!@#$%^&*()[]{}=+-_|~`1234567890…'
+    text = filter(lambda char: char not in punctuations, text_fragment)
+    
+    for char in text:
+        text_clear += char
+    
+    return text_clear
+
+
+
+    
+def get_context(text: str) -> dict:
+    """docstring"""
+    dict_context = {
+        'keyword': None,
+        'filename': None,
+        'line': None,
+        'context': None,
+        'text': None
+    }
     
     

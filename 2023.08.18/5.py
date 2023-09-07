@@ -1,6 +1,5 @@
 def central_tendency(num1: float, num2: float, /, *numbers: float) -> dict[str, float]:
-    """Функция вычисляет основные меры центральной тенденции для коллекции чисел"""
-    
+    """Функция вычисляет основные меры центральной тенденции для коллекции чисел."""
     sample = (num1, num2, *numbers)
     sorted_sample = sorted(sample)
     length_sample = len(sample)
@@ -8,30 +7,26 @@ def central_tendency(num1: float, num2: float, /, *numbers: float) -> dict[str, 
     
     product_num_sample = 1
     sum_inverse_sample = 0
-    
-    if not 0 in sample:
+    # ИСПОЛЬЗОВАТЬ: оператор not in
+    if 0 not in sample:
         for num in sample:
             product_num_sample *= num
             sum_inverse_sample += 1 / num
     else:
         product_num_sample = 0
-        
-    median = (
-        float(sorted_sample[center_index])
-        if length_sample % 2
-        else (sorted_sample[center_index] + sorted_sample[center_index - 1]) / 2
-    )
-    arithmetic = sum(sample) / length_sample
-    geometric = product_num_sample ** (1 / length_sample)
-    harmonic = length_sample / sum_inverse_sample if sum_inverse_sample else 0.0
-    
+
+    # ИСПОЛЬЗОВАТЬ: классическую условную конструкцию
+    if length_sample % 2:
+        median = float(sorted_sample[center_index])
+    else:
+        median = (sorted_sample[center_index] + sorted_sample[center_index-1]) / 2
     return {
         'median': median, 
-        'arithmetic': arithmetic, 
-        'geometric': geometric, 
-        'harmonic': harmonic
+        'arithmetic': sum(sample) / length_sample,
+        'geometric': product_num_sample ** (1 / length_sample),
+        'harmonic': length_sample / sum_inverse_sample if sum_inverse_sample else 0.0
     }
-    
+
 
 # >>> central_tendency(1, 2, 3, 4, 5)
 # {'median': 3.0, 'arithmetic': 3.0, 'geometric': 2.605171084697352, 'harmonic': 2.18978102189781}
@@ -52,3 +47,4 @@ def central_tendency(num1: float, num2: float, /, *numbers: float) -> dict[str, 
 
 # >>> central_tendency(1, 0)
 # {'median': 0.5, 'arithmetic': 0.5, 'geometric': 0.0, 'harmonic': 0.0}
+

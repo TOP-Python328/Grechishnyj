@@ -1,15 +1,11 @@
-def numbers_strip(numbers: list[float], n: int=1, *, copy=False) -> list:
-    """Функция удаляет N минимальных и N максимальных чисел из списка"""
-
+def numbers_strip(numbers: list[float], n: int = 1, *, copy=False) -> list:
+    """Функция удаляет N минимальных и N максимальных чисел из списка."""
     work_list = numbers.copy() if copy else numbers
-    
     for _ in range(n):
         work_list.remove(min(work_list))
         work_list.remove(max(work_list))
-        
     return work_list
-    
-    
+
 
 # >>> sample = [1, 2, 3, 4]
 # >>> sample_stripped = numbers_strip(sample)
@@ -38,3 +34,4 @@ def numbers_strip(numbers: list[float], n: int=1, *, copy=False) -> list:
 # [4]
 # >>> sample is sample_stripped
 # False
+

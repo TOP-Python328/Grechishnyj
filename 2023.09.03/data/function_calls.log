@@ -1,0 +1,4 @@
+2023.09.07 11:18:20 -> div_round(5, 2, digits=0) -> 2.0
+2023.09.07 11:18:33 -> div_round(5, 2, 1, digits=0) -> 2.5
+2023.09.07 11:20:23 -> div_round(5, 0, digits=0) .. ZeroDivisionError: division by zero
+2023.09.07 11:20:29 -> div_round(5, digits=0) .. TypeError: div_round() missing 1 required positional argument: 'num2'

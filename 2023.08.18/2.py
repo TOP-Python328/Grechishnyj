@@ -29,15 +29,17 @@ def taxi_cost(distance: int, wait_time: int = 0) -> int | None:
 # >>> taxi_cost(distance=1500, wait_time=5)
 # 155
 
-# >>> taxi_cost(wait_time=5, distanse=1500)
+# >>> taxi_cost(wait_time=5, distance=1500)
 # 155
 
 # >>> taxi_cost(wait_time=5)
 # TypeError: taxi_cost() missing 1 required positional argument: 'distance'
 
 # >>>> taxi_cost(1000)
-# >120
+# 120
 
 # >>>> print(taxi_cost(-1))
-# >None
+# None
 
+
+# ИТОГ: отлично — 3/3

@@ -1,5 +1,7 @@
+# КОММЕНТАРИЙ: обычно параметры перед произвольным кортежем позиционных аргументов считают строго позиционными — это так, если пользователь планирует что-то передавать в произвольный кортеж — и пренебрегают "параметром" /
 def central_tendency(num1: float, num2: float, /, *numbers: float) -> dict[str, float]:
     """Функция вычисляет основные меры центральной тенденции для коллекции чисел."""
+    # ПЕРЕИМЕНОВАТЬ: идентификатор numbers далее не используется, следовательно можно спокойно его перезаписать, не создавая новых лишних сущностей
     sample = (num1, num2, *numbers)
     sorted_sample = sorted(sample)
     length_sample = len(sample)
@@ -48,3 +50,5 @@ def central_tendency(num1: float, num2: float, /, *numbers: float) -> dict[str, 
 # >>> central_tendency(1, 0)
 # {'median': 0.5, 'arithmetic': 0.5, 'geometric': 0.0, 'harmonic': 0.0}
 
+
+# ИТОГ: отлично — 5/5

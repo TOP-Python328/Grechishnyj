@@ -1,17 +1,18 @@
 def orth_triangle(
         *,
+        # КОММЕНТАРИЙ: здесь ноль подходит, но в целом в ситуациях неопределённости лучше в качестве значений по умолчанию использовать None — это позволяет точно определить был ли вообще передан аргумент
         cathetus1: float = 0,
         cathetus2: float = 0,
         hypotenuse: float = 0
 ) -> float | None:
     """Функция вычисляет третью сторону прямоугольного треугольника по двум переданным."""
-
     if (
            cathetus1 and cathetus2 and hypotenuse
         or cathetus1 > hypotenuse and hypotenuse
         or cathetus2 > hypotenuse and hypotenuse
     ):
         return None
+    # УДАЛИТЬ: else избыточен
     else:
         if not cathetus1:
             return (hypotenuse**2 - cathetus2**2) ** 0.5
@@ -33,3 +34,5 @@ def orth_triangle(
 # >>> orth_triangle(cathetus1=10, hypotenuse=25)
 # 22.9128784747792
 
+
+# ИТОГ: очень хорошо — 4/4

@@ -7,6 +7,7 @@ def generate_system_dict() -> dict[str, int]:
     return system_dict
 
 
+# УДАЛИТЬ: с точки зрения производительности вместо такой функции гораздо эффективнее создать ещё один словарь, ключами которого будут являться значения первого словаря — тогда сопоставление каждого числа с цифрой в другой системе счисления не потребует повторной итерации по всему словарю
 def find_key(name_dict: dict, inp_value: int) -> str | None:
     """Функция осуществляет поиск и возвращает ключ элемента по значению элемента."""
     for key, value in name_dict.items():
@@ -24,8 +25,15 @@ def int_decimal(str_num: str, base: int) -> int | None:
     for digit in reverse_num:
         # ИСПОЛЬЗОВАТЬ: скобки избыточны — приоритет оператора возведения в степень выше, чем оператора умножения
         decimal_num += system_dict[digit] * base**power_num
-        power_num += 1   
+        power_num += 1
     return decimal_num
+    # ИСПОЛЬЗОВАТЬ: встроенную функцию enumerate()
+    # return sum(
+    #     system_dict[digit] * base**exp
+    #     for exp, digit in enumerate(str_num[::-1])
+    # )
+    # ИСПОЛЬЗОВАТЬ: или встроенную функцию int()
+    return int(str_num, base)
 
 
 def int_installed(num: int, base: int) -> str:
@@ -44,6 +52,7 @@ def int_base(number: str, start_base: int, end_base: int) -> str | None:
     int_decimal() - для преобразования произвольного числа в десятичную систему счисления
     int_installed() - для преобразования десятичного числа в произвольную систему счисления
     """
+    # ИСПРАВИТЬ: используйте цепочки неравенств представляя числовую ось, как я писал ранее
     if start_base < 2 or start_base > 36 or end_base < 2 or end_base > 36:
         return None
     
@@ -87,3 +96,5 @@ system_dict = generate_system_dict()
 # >>> print(int_base('aaaaaa', 9, 10))
 # None
 
+
+# ИТОГ: хорошо, немного доработать — 4/6

@@ -2,6 +2,7 @@ def strong_password(password: str) -> bool:
     """Функция возвращает результат проверки пароля."""
     if len(password) < 8:
         return False
+    # УДАЛИТЬ: else избыточен
     else:
         checkers = {
             'lat_lower': 0,
@@ -17,6 +18,7 @@ def strong_password(password: str) -> bool:
         # ИСПОЛЬЗОВАТЬ: также в Python возможно конструировать цепочки сравнительных операторов, таким образом and оказывается не нужен
         if 97 <= symbol <= 122:
             checkers['lat_lower'] += 1
+        # ИСПРАВИТЬ: в большинстве случаев этого набора символов хватит, но не всегда — лучше смотреть есть ли любые другие символы помимо букв и цифр
         if char in ' ,./<>?;\':\"-_=+()[]*&^%$#@':
             checkers['punctuation'] += 1
         if char.isdigit():
@@ -25,6 +27,7 @@ def strong_password(password: str) -> bool:
     if checkers['digits'] < 2:
         return False
 
+    # ИСПРАВИТЬ: здесь имеет смысл воспользоваться встроенной функцией all()
     for value in checkers.values():
         if not value:
             return False
@@ -53,3 +56,5 @@ def strong_password(password: str) -> bool:
 # >>> strong_password()
 # TypeError: strong_password() missing 1 required positional argument: 'password'
 
+
+# ИТОГ: хорошо, немного доработать — 3/5

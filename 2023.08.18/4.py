@@ -10,6 +10,7 @@ def countable_nouns(num: int, choice_words: tuple[str, str, str]) -> str:
     # ИСПОЛЬЗОВАТЬ: цепочку сравнительных операторов
     if 2 <= last_digit <= 4:
         return choice_words[1]
+    # ИСПРАВИТЬ: данный блок else повторяет первый условный блок — обычно, лучше конструировать условия так, чтобы блоки ветвления не повторялись: в данном случае это не требует чрезмерно сложных условий
     else:
         return choice_words[2]
 
@@ -32,3 +33,4 @@ def countable_nouns(num: int, choice_words: tuple[str, str, str]) -> str:
 # 'рублей'
 
 
+# ИТОГ: хорошо, но можно лучше — 2/3

@@ -55,9 +55,8 @@ def important_message(text: str) -> str:
     # #'
 
 def load_file(file_path: str | Path) -> Path:
-    """
-        Функция копирует файл в каталог задания
-        Возвращает объект скопированного модуля
+    """Функция копирует файл в каталог задания.
+    Возвращает объект скопированного модуля.
     """
     
     copy_name = 'copy_' + file_path.name
@@ -79,7 +78,7 @@ def load_file(file_path: str | Path) -> Path:
 
 
 def clear_text(text_fragment: str) -> str:
-    """docstring"""
+    """Функция возвращает текст очищенный от знаков пунктуации и цифр"""
     
     text_clear = ''
     punctuations = '.,;:/?<>«»"\'!@#$%^&*()[]{}=+-_|~`1234567890…'
@@ -89,18 +88,3 @@ def clear_text(text_fragment: str) -> str:
         text_clear += char
     
     return text_clear
-
-
-
-    
-def get_context(text: str) -> dict:
-    """docstring"""
-    dict_context = {
-        'keyword': None,
-        'filename': None,
-        'line': None,
-        'context': None,
-        'text': None
-    }
-    
-    

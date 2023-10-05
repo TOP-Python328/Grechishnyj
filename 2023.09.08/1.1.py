@@ -22,3 +22,14 @@ def schedule(
         dt_first = dt_first + td(days=1)
     
     return list_days
+    
+
+# >>> vacations = [
+# ...     (dt(2023, 5, 1), td(weeks=1)),
+# ...     (dt(2023, 7, 17), td(weeks=1))
+# ... ]
+# >>> py328 = schedule(dt(2023, 4, 1), 6, week_days = 7, total_days = 70)
+# >>> len(py328)
+# 70
+# >>> py328[28:32]
+# ['08/07/2023', '09/07/2023', '15/07/2023', '16/07/2023']

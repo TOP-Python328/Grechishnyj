@@ -59,8 +59,7 @@ class CountableNouns:
             return choice_words[1]
         else:
             return choice_words[2]
-            
-           
+                  
 
 # >>> CountableNouns.pick(1, 'год')
 # 'год'

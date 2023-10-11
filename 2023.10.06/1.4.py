@@ -37,8 +37,7 @@ class CountableNouns:
         with open(cls.db_path, mode="a", encoding='utf-8') as fileout:
             file_writer = writer(fileout, delimiter = ",", lineterminator="\n")
             file_writer.writerow(new_words)
-         
-        
+
     
     @classmethod
     def pick(cls, number: int, word: str) -> str:
@@ -66,7 +65,7 @@ class CountableNouns:
             return choice_words[1]
         else:
             return choice_words[2]
-               
+ 
 
 # >>> CountableNouns.words
 # {'год': ('года', 'лет'), 'месяц': ('месяца', 'месяцев'), 'день': ('дня', 'дней')}

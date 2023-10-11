@@ -45,7 +45,7 @@ class ChessKing:
             self.square = new_square
         else:
             raise ValueError("Несоответствующее значение")
-        
+
     
     def __str__(self):
         for key, value in globals().items():
@@ -59,7 +59,7 @@ class ChessKing:
             if self is value:
                 name = key
                 return f'{name.upper()}: {self.square}'
-        
+
 
 # >>> wk = ChessKing()
 # >>> wk.color

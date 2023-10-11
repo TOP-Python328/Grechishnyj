@@ -4,7 +4,7 @@ from datetime import date, time, datetime
 
 
 class PowerMeter:
-    """Описывает двухтарифный счётчик потребленной электрической мощности""" 
+    """Описывает двухтарифный счётчик потреблённой электрической мощности""" 
     
     def __init__(self):
         """
@@ -25,12 +25,12 @@ class PowerMeter:
             date(2023, 8, 1): 221.75,
             date(2023, 9, 1): 111.75,
         }
-        
+
     
     def meter(self, power: Number) -> Decimal:
-        """Вычисляет и возвращает стоимость согласно тарифному плану, действующему в текущий момент
+        """Метод вычисляет и возвращает стоимость согласно тарифному плану, действующему в текущий момент
         
-        :param power: суммарная потребленная мощность
+        :param power: суммарная потреблённая мощность
         :return charge: стоимость согласно тарифному плану
         """
         now = datetime.now()
@@ -46,7 +46,7 @@ class PowerMeter:
             self.charges[key] = round(charge, 2)
         return Decimal(charge)
 
-        
+
     def __repr__(self):
         name = type(self).__name__
         power = sum(float(value) for value in self.charges.values())

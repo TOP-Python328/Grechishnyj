@@ -5,11 +5,11 @@ class Tetrahedron:
         self.edge = edge
         
     def surface(self) -> float:
-        """Метод - возвращает площадь поверхности"""
+        """Метод вычисляет и возвращает площадь поверхности"""
         return self.edge ** 2 * 3 ** 0.5
     
     def volume(self) -> float:
-        """Метод - возвращает объём тела"""
+        """Метод вычисляет и возвращает объём тела"""
         return self.edge ** 3 / 12 * 2 ** 0.5
         
 # >>> t1 = Tetrahedron(5)

@@ -2,8 +2,6 @@ from decimal import Decimal
 from numbers import Number
 from datetime import date, time, datetime
 
-# Переменные для аннотаций
-Charges = dict[date, float]
 
 class PowerMeter:
     """Описывает двухтарифный счётчик потребленной электрической мощности""" 
@@ -14,13 +12,15 @@ class PowerMeter:
         :attr tariff2: второй тариф
         :attr tariff2_starts: время начала действия второго тарифа
         :attr tariff2_ends: время окончания действия второго тарифа
+        :attr charges: ещемесячные начисления
         """
+        # тарифы моего региона
         self.tariff1: Number = 6.51
         self.tariff2: Number = 4.80
         self.tariff2_starts: time = time(7)
         self.tariff2_ends: time = time(23)
         # словарь не пустой, для тестов
-        self.charges: Charges = {
+        self.charges: dict[date, float] = {
             date(2023, 7, 1): 219.75,
             date(2023, 8, 1): 221.75,
             date(2023, 9, 1): 111.75,
@@ -40,7 +40,6 @@ class PowerMeter:
             charge = Decimal(power * self.tariff1)
     
         key = date(now.year, now.month, 1)
-        
         if key in self.charges:
             self.charges[key] += round(charge, 2)
         else:

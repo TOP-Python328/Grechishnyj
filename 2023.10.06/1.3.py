@@ -1,5 +1,3 @@
-
-
 class ChessKing:
     """Шахматная фигура короля.
     
@@ -43,10 +41,9 @@ class ChessKing:
         
         :param new_square: новое поле, в которую осуществляется ход
         """
-        try:
-            if self.is_turn_valid(new_square):
-                self.square = new_square
-        except:
+        if self.is_turn_valid(new_square):
+            self.square = new_square
+        else:
             raise ValueError("Несоответствующее значение")
         
     
@@ -70,28 +67,42 @@ class ChessKing:
 # >>> wk.square
 # 'e1'
 # >>> wk.turn('d5')
-# >>> wk.square
-# 'e1'
+# ...
+# ValueError: Несоответствующее значение
 # >>> wk.turn('e2')
+# >>> wk.turn('d2')
+# >>> wk.turn('d1')
+# >>> wk.turn('f1')
+# ...
+# ValueError: Несоответствующее значение
+# >>> wk.turn('e1')
+# >>> wk.turn('f1')
 # >>> wk.square
-# 'e2'
+# 'f1'
 # >>> bk = ChessKing('black')
 # >>> bk.color
 # 'black'
 # >>> bk.square
 # 'e8'
+# >>> bk.turn('e1')
+# ...
+# ValueError: Несоответствующее значение
 # >>> bk.turn('e7')
+# >>> bk.turn('e6')
+# >>> bk.turn('e5')
+# >>> bk.turn('e4')
+# >>> bk.turn('e3')
+# >>> bk.turn('e2')
+# >>> bk.turn('e1')
 # >>> bk.square
-# 'e7'
-# >>> bk.turn('f6')
-# >>> bk.square
-# 'f6'
-# >>> bk.turn('a1')
-# >>> bk.square
-# 'f6'
+# 'e1'
 # >>> wk
-# WK: e2
-# >>> print(wk)
-# WK: e2
+# WK: e1
+# >>> bk
+# BK: e1
+# >>> print(wk, bk)
+# WK: e1 BK: e1
+# >>> wk.__repr__()
+# 'WK: e1'
 # >>> bk.__repr__()
-# 'BK: f6'
+# 'BK: e1'

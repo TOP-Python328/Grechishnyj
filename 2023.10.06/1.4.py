@@ -28,12 +28,17 @@ class CountableNouns:
         template = 'введите слово, согласующееся с числительным "{}": '
         
         if not word1:
-            new_words = [input(template.format(nw)) for nw in new_words]
-            cls.words[new_words[0]] = tuple(new_words[1:])
+            new_words = [input(template.format(nw)) for nw in new_words]  
         else:
             new_words = [input(template.format(nw)) for nw in new_words[1:]]
-            cls.words[word1] = tuple(new_words)
-    
+            new_words.insert(0, word1)
+        cls.words[new_words[0]] = tuple(new_words[1:])
+        
+        with open(cls.db_path, mode="a", encoding='utf-8') as fileout:
+            file_writer = writer(fileout, delimiter = ",", lineterminator="\n")
+            file_writer.writerow(new_words)
+         
+        
     
     @classmethod
     def pick(cls, number: int, word: str) -> str:
@@ -50,44 +55,50 @@ class CountableNouns:
         last_digit = number % 10
         decade_digit = number % 100 // 10
         
+        # проверка на 11 <= x <= 19
         if decade_digit == 1:
             return choice_words[2]
+        
+        # проверка по последней цифре
         if last_digit == 1:
             return choice_words[0]
-        
-        if 1 < last_digit < 5:
+        elif 1 < last_digit < 5:
             return choice_words[1]
         else:
             return choice_words[2]
-                  
+               
 
-# >>> CountableNouns.pick(1, 'год')
-# 'год'
 # >>> CountableNouns.words
 # {'год': ('года', 'лет'), 'месяц': ('месяца', 'месяцев'), 'день': ('дня', 'дней')}
-# >>> CountableNouns.pick(5, 'год')
-# 'лет'
-# >>> CountableNouns.pick(5, 'город')
-# введите слово, согласующееся с числительным "два": города
-# введите слово, согласующееся с числительным "пять": городов
-# 'городов'
-# >>> CountableNouns.words
-# {'год': ('года', 'лет'), 'месяц': ('месяца', 'месяцев'), 'день': ('дня', 'дней'), 'город': ('города', 'городов')}
-
-# >>> CountableNouns.save_words()
-# введите слово, согласующееся с числительным "один": карандаш
+# >>> CountableNouns.pick(15, 'карандаш')
 # введите слово, согласующееся с числительным "два": карандаша
 # введите слово, согласующееся с числительным "пять": карандашей
+# 'карандашей'
+# >>>
 # >>> CountableNouns.words
-# {'год': ('года', 'лет'), 'месяц': ('месяца', 'месяцев'), 'день': ('дня', 'дней'), 'город': ('города', 'городов'), 'карандаш': ('карандаша', 'карандашей')}
+# {'год': ('года', 'лет'), 'месяц': ('месяца', 'месяцев'), 'день': ('дня', 'дней'), 'карандаш': ('карандаша', 'карандашей')}
+# >>>
+# >>> CountableNouns.save_words()
+# введите слово, согласующееся с числительным "один": рубль
+# введите слово, согласующееся с числительным "два": рубля
+# введите слово, согласующееся с числительным "пять": рублей
+# >>>
+# >>> CountableNouns.pick(103, 'рубль')
+# 'рубля'
+# >>>
+# >>> CountableNouns.words
+# {'год': ('года', 'лет'), 'месяц': ('месяца', 'месяцев'), 'день': ('дня', 'дней'), 'карандаш': ('карандаша', 'карандашей'), 'рубль': ('рубля', 'рублей')}
+# >>>
+# >>> print(CountableNouns.db_path.read_text(encoding='utf-8'))
+# год,года,лет
+# месяц,месяца,месяцев
+# день,дня,дней
+# карандаш,карандаша,карандашей
+# рубль,рубля,рублей
+# >>> CountableNouns.pick(11, 'рубль')
+# 'рублей'
+# >>> CountableNouns.pick(2, 'рубль')
+# 'рубля'
+# >>> CountableNouns.pick(5, 'рубль')
+# 'рублей'
 
-# >>> CountableNouns.pick(11, 'карандаш')
-# 'карандашей'
-# >>> CountableNouns.pick(23541, 'карандаш')
-# 'карандаш'
-# >>> CountableNouns.pick(777, 'карандаш')
-# 'карандашей'
-# >>> CountableNouns.pick(12, 'карандаш')
-# 'карандашей'
-# >>> CountableNouns.pick(22, 'карандаш')
-# 'карандаша'

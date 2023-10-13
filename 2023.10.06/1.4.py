@@ -54,17 +54,12 @@ class CountableNouns:
         last_digit = number % 10
         decade_digit = number % 100 // 10
         
-        # проверка на 11 <= x <= 19
-        if decade_digit == 1:
+        if decade_digit == 1 or last_digit > 4:
             return choice_words[2]
-        
-        # проверка по последней цифре
         if last_digit == 1:
             return choice_words[0]
-        elif 1 < last_digit < 5:
-            return choice_words[1]
-        else:
-            return choice_words[2]
+        return choice_words[1]
+   
  
 
 # >>> CountableNouns.words

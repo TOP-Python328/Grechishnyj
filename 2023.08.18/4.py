@@ -3,16 +3,15 @@ def countable_nouns(num: int, choice_words: tuple[str, str, str]) -> str:
     last_digit = num % 10
     decade_digit = num % 100 // 10
     
-    if decade_digit == 1:
+    if decade_digit == 1 or last_digit > 4:
         return choice_words[2]
     if last_digit == 1:
         return choice_words[0]
     # ИСПОЛЬЗОВАТЬ: цепочку сравнительных операторов
-    if 2 <= last_digit <= 4:
-        return choice_words[1]
+    return choice_words[1]
     # ИСПРАВИТЬ: данный блок else повторяет первый условный блок — обычно, лучше конструировать условия так, чтобы блоки ветвления не повторялись: в данном случае это не требует чрезмерно сложных условий
-    else:
-        return choice_words[2]
+    # else:
+        # return choice_words[2]
 
 
 # >>> countable_nouns(1, ('год', 'года', 'лет'))

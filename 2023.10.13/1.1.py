@@ -2,6 +2,7 @@ from numbers import Number
 from collections.abc import Iterable
 from typing import Self, Callable
 from operator import add, sub, neg, mul
+from itertools import chain
 
 RawRow = Iterable[Number]
 RawMatrix = Iterable[RawRow]
@@ -44,14 +45,14 @@ class Matrix:
         """Метод возвращает транспонированную матрицу"""
         self.__rows = [[self.__rows[j][i] for j in range(self.n)] for i in range(self.m)]
         self.n, self.m = self.m, self.n
-        return self.__rows
+        return self
 
 
     def __getitem__(self: Self, index: int) -> RawRow:
         """Доступ на чтение строки (элемента) матрицы по индексу"""
         return self.__rows[index]
+
     
-    # В работе...
     def __element_wise_operation(self, operation: Callable, other: Self | Number) -> Self:
         """Выполняет переданную операцию со своим и переданным объектом"""
         new_matrix = Matrix([[0 for _ in range(self.m)] for _ in range(self.n)])
@@ -106,87 +107,82 @@ class Matrix:
         return self.__element_wise_operation(mul, -1)       
 
 
+    # не выводит дробную часть
+    # def __repr__(self):
+        # format_item = f'%{len(str(max(abs(i) for i in chain(*self.__rows))))}d'
+        # representation = ''
+        # for i in range(self.n):
+            # representation += f'{" ".join(format_item %(self.__rows[i][j]) for j in range(self.m))} \n'
+        # return representation
 
-    # В работе...
     def __repr__(self):
         representation = ''
         for i in range(self.n):
-            for j in range(self.m):
-                representation += f' {self.__rows[i][j]}'
-            representation += '\n'
+            representation += " ".join(f"{round(self[i][j], 1):>2}" for j in range(self.m)) + '\n'
         return representation
         
-        
-   
-# a = [[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1]]
-# b = [[2,2,2,2,2],[2,2,2,2,2],[2,2,2,2,2]]
-
-
+  
+# >>> a = [[1,2,3,4,5],[6,7,8,9,10],[11,12,13,14,15]]
 # >>> m1 = Matrix(a)
-# >>> -m1
- # -1 -1 -1 -1 -1
- # -1 -1 -1 -1 -1
- # -1 -1 -1 -1 -1
-
-# >>> m1 = Matrix(a)
-# >>> m2 = m1 * 5
-# >>> m3 = 4 * m1
-# >>> m4 = m1 - 6
-# >>> m5 = 9 - m4
-# >>> m6 = m1 + m2
 # >>> m1
- # 1 1 1 1 1
- # 1 1 1 1 1
- # 1 1 1 1 1
+ # 1  2  3  4  5
+ # 6  7  8  9 10
+# 11 12 13 14 15
+
+# >>> m2 = m1 * 3
+# >>> m3 = m2 * 0.5 - m1
+# >>> m4 = m1 + m2 + m3
+# >>> m1
+ # 1  2  3  4  5
+ # 6  7  8  9 10
+# 11 12 13 14 15
 
 # >>> m2
- # 5 5 5 5 5
- # 5 5 5 5 5
- # 5 5 5 5 5
+ # 3  6  9 12 15
+# 18 21 24 27 30
+# 33 36 39 42 45
 
 # >>> m3
- # 4 4 4 4 4
- # 4 4 4 4 4
- # 4 4 4 4 4
+# 0.5 1.0 1.5 2.0 2.5
+# 3.0 3.5 4.0 4.5 5.0
+# 5.5 6.0 6.5 7.0 7.5
 
 # >>> m4
- # -5 -5 -5 -5 -5
- # -5 -5 -5 -5 -5
- # -5 -5 -5 -5 -5
+# 4.5 9.0 13.5 18.0 22.5
+# 27.0 31.5 36.0 40.5 45.0
+# 49.5 54.0 58.5 63.0 67.5
 
-# >>> m5
- # -14 -14 -14 -14 -14
- # -14 -14 -14 -14 -14
- # -14 -14 -14 -14 -14
+# >>> m1[0][0] = 0
+# >>> m2[0][0] = 0
+# >>> m3[0][0] = 0
+# >>> m4[0][0] = 0
+# >>>
+# >>> m1.transpose
+ # 0  6 11
+ # 2  7 12
+ # 3  8 13
+ # 4  9 14
+ # 5 10 15
 
-# >>> m6
- # 6 6 6 6 6
- # 6 6 6 6 6
- # 6 6 6 6 6
+# >>> m2.transpose
+ # 0 18 33
+ # 6 21 36
+ # 9 24 39
+# 12 27 42
+# 15 30 45
 
-# >>> m1 + m2 + m3
- # 10 10 10 10 10
- # 10 10 10 10 10
- # 10 10 10 10 10
+# >>> m3.transpose
+ # 0 3.0 5.5
+# 1.0 3.5 6.0
+# 1.5 4.0 6.5
+# 2.0 4.5 7.0
+# 2.5 5.0 7.5
 
-# >>> m7 = m1 + m2 + m3 + m4 + m5 + m6
-# >>> m7
- # -3 -3 -3 -3 -3
- # -3 -3 -3 -3 -3
- # -3 -3 -3 -3 -3
+# >>> m4.transpose
+ # 0 27.0 49.5
+# 9.0 31.5 54.0
+# 13.5 36.0 58.5
+# 18.0 40.5 63.0
+# 22.5 45.0 67.5
 
-# >>> m7.transpose
-# [[-3, -3, -3], [-3, -3, -3], [-3, -3, -3], [-3, -3, -3], [-3, -3, -3]]
-# >>> m7
- # -3 -3 -3
- # -3 -3 -3
- # -3 -3 -3
- # -3 -3 -3
- # -3 -3 -3
 
-# >>> -m7
- # 3 3 3
- # 3 3 3
- # 3 3 3
- # 3 3 3
- # 3 3 3

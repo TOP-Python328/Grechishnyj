@@ -1,7 +1,7 @@
 from numbers import Number
 from collections.abc import Iterable
 from typing import Self, Callable
-from operator import add, sub, mul
+from operator import add, sub, neg, mul
 
 RawRow = Iterable[Number]
 RawMatrix = Iterable[RawRow]
@@ -23,14 +23,6 @@ class Matrix:
             self.m = len(raw_matrix[0])
         else:
             raise ValueError('невозможно сконструировать матрицу')
-    
-
-    @property
-    def transpose(self: Self) -> Self:
-        """Метод возвращает транспонированную матрицу"""
-        self.__rows = [[self.__rows[j][i] for j in range(self.n)] for i in range(self.m)]
-        self.n, self.m = self.m, self.n
-        return self.__rows
 
 
     @staticmethod
@@ -46,57 +38,155 @@ class Matrix:
                     return False            
         return True
 
-    
+ 
     @property
+    def transpose(self: Self) -> Self:
+        """Метод возвращает транспонированную матрицу"""
+        self.__rows = [[self.__rows[j][i] for j in range(self.n)] for i in range(self.m)]
+        self.n, self.m = self.m, self.n
+        return self.__rows
+
+
     def __getitem__(self: Self, index: int) -> RawRow:
-        """Доступ на чтение строки матрицы по индексу"""
+        """Доступ на чтение строки (элемента) матрицы по индексу"""
         return self.__rows[index]
-
     
-
-    def __element_wise_operation(self: Self, operation: Callable, other: RawMatrix | Number) -> Self:
-        """Выполняет переданную операцию матрицы с переданным объектом"""
-        print(operation.__name__)
-        new_object = Matrix(self.__rows)
-        if type(other) is Matrix:
+    # В работе...
+    def __element_wise_operation(self, operation: Callable, other: Self | Number) -> Self:
+        """Выполняет переданную операцию со своим и переданным объектом"""
+        new_matrix = Matrix([[0 for _ in range(self.m)] for _ in range(self.n)])
+        if isinstance(other, Number): 
             for i in range(self.n):
                 for j in range(self.m):
-                    new_object[i][j] = self[i][j] + other[i][j]
-        else:
-            for i in range(self.n):
-                for j in range(self.m):
-                    new_object[i][j] = self[i][j] + other
-        return new_object
-
-  
+                    new_matrix[i][j] = operation(self[i][j], other)
+        elif isinstance(other, Matrix):
+            if operation.__name__ == 'mul':
+                raise NotImplementedError('умножение матриц будет реализованно в будущем')
+            if self.n == other.n or self.m == other.m:
+                for i in range(self.n):
+                    for j in range(self.m):
+                        new_matrix[i][j] = operation(self[i][j], other[i][j])
+            else:
+                raise ValueError('сложение и вычитание возможно только для матриц одной размерности')
+        return new_matrix
+        
+    
     def __add__(self, other) -> Self:
-        return self.element_wise_operation(add, other)  
+        """docstring"""
+        return self.__element_wise_operation(add, other)
 
+        
+    def __radd__(self, other) -> Self:
+        """docstring"""
+        return self.__element_wise_operation(add, other)
 
-    # def __neg__(self, other) -> Self:
-        # new_object = Matrix(self.rows)
-        # for i in range(len(self.rows)):
-            # for j in range(len(self.rows)):
-                # self.rows[i][j] -= other.rows[i][j]         
-    
-    
-    # def __sub__(self, other) -> Self:
-        # new_object = Matrix(self.rows)
-        # for i in range(len(self.rows)):
-            # for j in range(len(self.rows)):
-                # new_object[i][j] = self.rows[i][j] - other.rows[i][j] 
-        # return new_object 
-    
-    
-    # def __mul__(self, other) -> Self:
-        # pass
       
+    def __sub__(self, other) -> Self:
+        """docstring"""
+        return self.__element_wise_operation(sub, other)  
+
+
+    def __rsub__(self, other) -> Self:
+        """docstring"""
+        return self.__element_wise_operation(sub, other) 
+
     
-    
+    def __mul__(self, other) -> Self:
+        """docstring"""
+        return self.__element_wise_operation(mul, other)  
+
+
+    def __rmul__(self, other) -> Self:
+        """docstring"""
+        return self.__element_wise_operation(mul, other)  
+
+
+    def __neg__(self) -> Self:
+        """docstring"""
+        return self.__element_wise_operation(mul, -1)       
+
+
+
+    # В работе...
     def __repr__(self):
         representation = ''
         for i in range(self.n):
             for j in range(self.m):
-                representation += f' {self.rows[i][j]}'
+                representation += f' {self.__rows[i][j]}'
             representation += '\n'
         return representation
+        
+        
+   
+# a = [[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1]]
+# b = [[2,2,2,2,2],[2,2,2,2,2],[2,2,2,2,2]]
+
+
+# >>> m1 = Matrix(a)
+# >>> -m1
+ # -1 -1 -1 -1 -1
+ # -1 -1 -1 -1 -1
+ # -1 -1 -1 -1 -1
+
+# >>> m1 = Matrix(a)
+# >>> m2 = m1 * 5
+# >>> m3 = 4 * m1
+# >>> m4 = m1 - 6
+# >>> m5 = 9 - m4
+# >>> m6 = m1 + m2
+# >>> m1
+ # 1 1 1 1 1
+ # 1 1 1 1 1
+ # 1 1 1 1 1
+
+# >>> m2
+ # 5 5 5 5 5
+ # 5 5 5 5 5
+ # 5 5 5 5 5
+
+# >>> m3
+ # 4 4 4 4 4
+ # 4 4 4 4 4
+ # 4 4 4 4 4
+
+# >>> m4
+ # -5 -5 -5 -5 -5
+ # -5 -5 -5 -5 -5
+ # -5 -5 -5 -5 -5
+
+# >>> m5
+ # -14 -14 -14 -14 -14
+ # -14 -14 -14 -14 -14
+ # -14 -14 -14 -14 -14
+
+# >>> m6
+ # 6 6 6 6 6
+ # 6 6 6 6 6
+ # 6 6 6 6 6
+
+# >>> m1 + m2 + m3
+ # 10 10 10 10 10
+ # 10 10 10 10 10
+ # 10 10 10 10 10
+
+# >>> m7 = m1 + m2 + m3 + m4 + m5 + m6
+# >>> m7
+ # -3 -3 -3 -3 -3
+ # -3 -3 -3 -3 -3
+ # -3 -3 -3 -3 -3
+
+# >>> m7.transpose
+# [[-3, -3, -3], [-3, -3, -3], [-3, -3, -3], [-3, -3, -3], [-3, -3, -3]]
+# >>> m7
+ # -3 -3 -3
+ # -3 -3 -3
+ # -3 -3 -3
+ # -3 -3 -3
+ # -3 -3 -3
+
+# >>> -m7
+ # 3 3 3
+ # 3 3 3
+ # 3 3 3
+ # 3 3 3
+ # 3 3 3

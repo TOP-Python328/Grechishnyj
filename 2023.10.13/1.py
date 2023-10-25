@@ -45,7 +45,7 @@ class Matrix:
     def transpose(self: Self) -> Self:
         """Метод возвращает транспонированную матрицу"""
         # ИСПРАВИТЬ: операция транспонирования должна возвращать новый объект, а не изменённый текущий экземпляр
-        # ИПРАВЛЕНО
+        # ИСПРАВЛЕНО
         return Matrix([[self.__rows[j][i] for j in range(self.n)] for i in range(self.m)])
 
     def __getitem__(self: Self, index: int) -> RawRow:

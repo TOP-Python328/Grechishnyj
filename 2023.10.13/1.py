@@ -60,10 +60,12 @@ class Matrix:
                     new_matrix[i][j] = operation(self[i][j], other)
         elif isinstance(other, Matrix):
             # ИСПРАВИТЬ: лучше сравнить напрямую идентичность с объектом функции
-            if operation.__name__ == 'mul':
+            # ИСПРАВЛЕНО
+            if operation is mul:
                 raise NotImplementedError('умножение матриц будет реализованно в будущем')
             # ИСПРАВИТЬ: складываются матрицы только строго одной размерности, а не только по одному из измерений (см. тест ниже)
-            if self.n == other.n or self.m == other.m:
+            # ИСПРАВЛЕНО
+            if self.n == other.n and self.m == other.m:
                 for i in range(self.n):
                     for j in range(self.m):
                         new_matrix[i][j] = operation(self[i][j], other[i][j])
@@ -83,7 +85,10 @@ class Matrix:
     def __rsub__(self, other) -> Self:
         # ИСПРАВИТЬ: переставлять объекты в вычитании надо с сохранением знаков (см. тест ниже)
         # КОММЕНТАРИЙ: я зачем вам унарное отрицание подкинул, мм?..)
-        return self.__element_wise_operation(sub, other)
+        # ИСПРАВЛЕНО
+        sub_matrix = -self
+        print(sub_matrix)
+        return sub_matrix.__element_wise_operation(add, other)
 
     def __mul__(self, other) -> Self:
         return self.__element_wise_operation(mul, other)

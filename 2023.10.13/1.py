@@ -53,11 +53,9 @@ class Matrix:
     def __element_wise_operation(self, operation: Callable, other: Self | Number) -> Self:
         """Выполняет переданную операцию со своим и переданным объектом"""
         # ИСПРАВИТЬ: предварительное создание нулевой матрицы избыточно, это лишние итерации — создавайте генераторными выражениями объект с вычисленными значениями и сразу передавайте этот объект в конструктор
-        new_matrix = Matrix([[0 for _ in range(self.m)] for _ in range(self.n)])
+        # ИСПРАВЛЕНО
         if isinstance(other, Number):
-            for i in range(self.n):
-                for j in range(self.m):
-                    new_matrix[i][j] = operation(self[i][j], other)
+            return Matrix([[operation(self[i][j], other) for j in range(self.m)] for i in range(self.n)])
         elif isinstance(other, Matrix):
             # ИСПРАВИТЬ: лучше сравнить напрямую идентичность с объектом функции
             # ИСПРАВЛЕНО
@@ -66,12 +64,10 @@ class Matrix:
             # ИСПРАВИТЬ: складываются матрицы только строго одной размерности, а не только по одному из измерений (см. тест ниже)
             # ИСПРАВЛЕНО
             if self.n == other.n and self.m == other.m:
-                for i in range(self.n):
-                    for j in range(self.m):
-                        new_matrix[i][j] = operation(self[i][j], other[i][j])
+                return Matrix([[operation(self[i][j],  other[i][j]) for j in range(self.m)] for i in range(self.n)])
             else:
                 raise ValueError('сложение и вычитание возможно только для матриц одной размерности')
-        return new_matrix
+
 
     def __add__(self, other) -> Self:
         return self.__element_wise_operation(add, other)
@@ -87,7 +83,6 @@ class Matrix:
         # КОММЕНТАРИЙ: я зачем вам унарное отрицание подкинул, мм?..)
         # ИСПРАВЛЕНО
         sub_matrix = -self
-        print(sub_matrix)
         return sub_matrix.__element_wise_operation(add, other)
 
     def __mul__(self, other) -> Self:

@@ -20,24 +20,26 @@ class Matrix:
             # ИСПРАВИТЬ: здесь должен быть уже не любой итерируемый объект, а именно список списков чисел (см. тест ниже)
             self.__rows = raw_matrix
             self.n = len(raw_matrix)
-            self.m = len(raw_matrix[0])
-        else:
-            raise ValueError('невозможно сконструировать матрицу')
+            self.m = len(raw_matrix[0])   
 
 
     @staticmethod
     def is_valid(raw_matrix: RawMatrix) -> bool:
         """Метод проверяет, является ли аргумент подходящим объектом для конструирования матрицы"""
         # ДОБАВИТЬ: обработчики исключений (см. тест ниже)
-        if len(set(map(len, raw_matrix))) != 1:
-            return False
+        # ИСПРАВЛЕНО
+        if not isinstance(raw_matrix, list):
+            raise ValueError('невозможно сконструировать матрицу: матрица должна быть списком')
         for row in raw_matrix:
-            if not iter(row):
-                return False
-            for num in row:
-                if not isinstance(num, Number):
-                    return False
-        return True
+            if not isinstance(row, list):
+                raise ValueError('невозможно сконструировать матрицу: ряды матрицы должны быть списками')
+                for num in row:
+                    if not isinstance(num, Number):
+                        raise ValueError('невозможно сконструировать матрицу: элементами рядов матрицы должны быть числа')
+        if len(set(map(len, raw_matrix))) != 1:
+            raise ValueError('невозможно сконструировать матрицу: матрица должна содержать ряды с одинаковой длинной')
+        return True    
+        
 
     @property
     def transpose(self: Self) -> Self:

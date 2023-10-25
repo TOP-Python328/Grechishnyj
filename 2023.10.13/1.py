@@ -43,9 +43,8 @@ class Matrix:
     def transpose(self: Self) -> Self:
         """Метод возвращает транспонированную матрицу"""
         # ИСПРАВИТЬ: операция транспонирования должна возвращать новый объект, а не изменённый текущий экземпляр
-        self.__rows = [[self.__rows[j][i] for j in range(self.n)] for i in range(self.m)]
-        self.n, self.m = self.m, self.n
-        return self
+        # ИПРАВЛЕНО
+        return Matrix([[self.__rows[j][i] for j in range(self.n)] for i in range(self.m)])
 
     def __getitem__(self: Self, index: int) -> RawRow:
         """Доступ на чтение строки (элемента) матрицы по индексу"""
@@ -95,7 +94,7 @@ class Matrix:
     def __neg__(self) -> Self:
         return self.__element_wise_operation(mul, -1)
 
-    # не выводит дробную часть
+    
     # def __repr__(self):
         # КОММЕНТАРИЙ: не выводит дробную часть, потому что %d — это код для целого числа, для вещественного — %f
         # format_item = f'%{len(str(max(abs(i) for i in chain(*self.__rows))))}d'

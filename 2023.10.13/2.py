@@ -39,8 +39,7 @@ class Matrix:
     @cache
     def transpose(self: Self) -> Self: 
         """Метод возвращает транспонированную матрицу"""
-        self.n, self.m = self.m, self.n
-        return self
+        return self.__class__(*self.__transpose, n=self.m, m=self.n)
         
         
     def __element_wise_operation(self, operation: Callable, other: Self | Number) -> Self:
@@ -93,10 +92,10 @@ class Matrix:
         else:
             num_format = f'>{str(len(str(max(num for num in self.__flat))))}'
         rep_lines = []
-        for i in range(0, len(self.__flat), self.n):
+        for i in range(0, len(self.__flat), self.m):
             rep_lines.append(
                 " ".join(f"{round(num, 1):{num_format}}" 
-                for num in self.__flat[i:i + self.n])
+                for num in self.__flat[i:i + self.m])
             )
         representation = '\n'.join(f'{rep}' for rep in rep_lines)
         return representation 

@@ -46,7 +46,7 @@ class Matrix:
         """Метод возвращает транспонированную матрицу"""
         # ИСПРАВИТЬ: операция транспонирования должна возвращать новый объект, а не изменённый текущий экземпляр
         # ИСПРАВЛЕНО
-        return Matrix([[self.__rows[j][i] for j in range(self.n)] for i in range(self.m)])
+        return self.__class__([[self.__rows[j][i] for j in range(self.n)] for i in range(self.m)])
 
     def __getitem__(self: Self, index: int) -> RawRow:
         """Доступ на чтение строки (элемента) матрицы по индексу"""
@@ -57,8 +57,8 @@ class Matrix:
         # ИСПРАВИТЬ: предварительное создание нулевой матрицы избыточно, это лишние итерации — создавайте генераторными выражениями объект с вычисленными значениями и сразу передавайте этот объект в конструктор
         # ИСПРАВЛЕНО
         if isinstance(other, Number):
-            return Matrix([[operation(self[i][j], other) for j in range(self.m)] for i in range(self.n)])
-        elif isinstance(other, Matrix):
+            return self.__class__([[operation(self[i][j], other) for j in range(self.m)] for i in range(self.n)])
+        elif isinstance(other, self.__class__):
             # ИСПРАВИТЬ: лучше сравнить напрямую идентичность с объектом функции
             # ИСПРАВЛЕНО
             if operation is mul:
@@ -66,7 +66,7 @@ class Matrix:
             # ИСПРАВИТЬ: складываются матрицы только строго одной размерности, а не только по одному из измерений (см. тест ниже)
             # ИСПРАВЛЕНО
             if self.n == other.n and self.m == other.m:
-                return Matrix([[operation(self[i][j],  other[i][j]) for j in range(self.m)] for i in range(self.n)])
+                return self.__class__([[operation(self[i][j],  other[i][j]) for j in range(self.m)] for i in range(self.n)])
             else:
                 raise ValueError('сложение и вычитание возможно только для матриц одной размерности')
 

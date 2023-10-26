@@ -14,7 +14,6 @@ class Matrix:
         :param n: количество строк
         :param m: количество столбцов
         """
-
         if self.is_valid(*args, row=n, col=m):
             self.__flat: tuple[Number, ...] = args
             self.n = n
@@ -29,10 +28,10 @@ class Matrix:
         """Метод проверяет, является ли аргумент подходящим объектом для конструирования матрицы"""
         # ДОБАВИТЬ: перехват исключения ValueError: невозможно сконструировать матрицу
         if len(args) != row * col:
-            return False
+            raise ValueError('невозможно сконструировать матрицу: некорректные размеры')
         for num in args:
             if not isinstance(num, Number):
-                return False
+                raise ValueError('невозможно сконструировать матрицу: элементами матрицы должны быть числа')
         return True
      
     
@@ -40,7 +39,8 @@ class Matrix:
     @cache
     def transpose(self: Self) -> Self: 
         """Метод возвращает транспонированную матрицу"""
-        return self.__transpose
+        self.n, self.m = self.m, self.n
+        return self
         
         
     def __element_wise_operation(self, operation: Callable, other: Self | Number) -> Self:
@@ -86,29 +86,17 @@ class Matrix:
     def __neg__(self) -> Self:
         return self.__mul__(-1)
 
-
-
-
-
-
-
-
-
       
     def __repr__(self):
-        # ИСПРАВИТЬ: используйте генераторное выражение в ещё одном join() — и не будет ни лишних пробелов, ни лишних eol
-        #" ".join(f"{round(self[i][j], 1):>2}" for j in range(self.m)) + '\n'
-        
-        print(self.__flat, self.n, self.m, self.__transpose)
-        return f'{self.__flat}'
-        # representation = ''
-        # for i in range(self.n):
-            # representation += " ".join(f"{round(self[i][j], 1):>2}" for j in range(self.m)) + '\n'
-        # return representation
-        
-    # def __repr__(self):
-        # # ИСПРАВИТЬ: используйте генераторное выражение в ещё одном join() — и не будет ни лишних пробелов, ни лишних eol
-        # representation = ''
-        # for i in range(self.n):
-            # representation += " ".join(f"{round(self[i][j], 1):>2}" for j in range(self.m)) + '\n'
-        # return representation
+        if abs(min(self.__flat)) > abs(max(self.__flat)):
+            num_format = f'>{str(len(str(min(num for num in self.__flat))))}'
+        else:
+            num_format = f'>{str(len(str(max(num for num in self.__flat))))}'
+        rep_lines = []
+        for i in range(0, len(self.__flat), self.n):
+            rep_lines.append(
+                " ".join(f"{round(num, 1):{num_format}}" 
+                for num in self.__flat[i:i + self.n])
+            )
+        representation = '\n'.join(f'{rep}' for rep in rep_lines)
+        return representation 

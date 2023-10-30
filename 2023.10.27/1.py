@@ -26,11 +26,8 @@ class Point:
         
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
-            class_name = self.__class__.__name__
-            raise ValueError(f'{class_name} the comparison can only be made with {class_name}')
-        if self.x == other.x and self.y == other.y:
-            return True
-        return False
+            return False
+        return self.x == other.x and self.y == other.y
 
 # >>> p = Point(1, 2)
 # >>> p
@@ -58,6 +55,8 @@ class Point:
 # >>> p1 != p3
 # True
 # >>> p1 != p2
+# False
+# >>> p1 == (1, 2)
 # False
 
 

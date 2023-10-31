@@ -1,6 +1,5 @@
 class Point:
-    """Класс описывает точку с координатами по осям x, y"""
-    
+    """Класс описывает точку с координатами x, y"""
     def __init__(self, x: float, y: float):
         self.__x = x
         self.__y = y
@@ -41,8 +40,7 @@ class Point:
 
 
 class Line:
-    """Класс описывает линию с координатами (x, y) для начальной и конечной точек"""
-    
+    """Класс описывает отрезок с координатами (x, y) для начальной и конечной точек"""
     def __init__(self, start: Point, end: Point):
         self.__start = start
         self.__end = end
@@ -50,7 +48,7 @@ class Line:
 
     @staticmethod
     def __length_calc(point1: Point, point2: Point) -> float:
-        """Возвращает расстояние между двумя точками линиии"""
+        """Возвращает длину отрезка"""
         return ((point2[0] - point1[0])**2 + (point2[1] - point1[1])**2)**0.5
 
     
@@ -106,64 +104,93 @@ class Line:
         return(f'{self.start}---{self.end}')
 
 
-class Polygon:
-    pass
-    
+class Polygon(list):
+    """Класс описывает многоугольник на координатной плоскости"""
+    def __init__(self, side1: Line, side2: Line, side3: Line, *sides: tuple[Line, ...]):
+        super().__init__((side1, side2, side3, *sides))
+        # self.__perimetr = 0
 
-# >>> p = Point(1, 2)
-# >>> p
-# (1, 2)
-# >>> print(p)
-# (1, 2)
-# >>> repr(p) == str(p)
-# True
-# >>> p.x, p.y
-# (1, 2)
-# >>> p.x, p.y = 1, 2
+
+    def _is_closed(self) -> bool:
+        """Проверяет, формируют ли отрезки замкнутый многоугольник""" 
+        if self[0].start != self[len(self) - 1].end:
+            return False
+        for i in range(len(self) - 1):
+            if self[i].end != self[i+1].start:
+                return False
+        else:
+            return True
+
+
+    @property
+    def perimeter(self):
+        """Вычисляет и возвращает периметр многоугольника"""
+        if self._is_closed():
+            return sum(line.length for line in self)
+        else:
+            raise ValueError("line items doesn't from a closed plygon") 
+
+
+    @perimeter.setter
+    def perimeter(self, new_perimeter):
+        """Возвращает исключение при попытке изменения свойства perimeter"""
+        raise AttributeError(f"property 'perimeter' of '{self.__class__.__name__}' object has no setter") 
+
+
+# >>> p1 = Point(0, 3)
+# >>> p2 = Point(4, 0)
+# >>> p3 = Point(8, 3)
+# >>> p4 = Point(5, 5)
+# 
+# >>> p1, p2, p3, p4
+# ((0, 3), (4, 0), (8, 3), (5, 5))
+# 
+# >>> p1.x, p1.y, p2.x, p2.y, p3.x, p3.y, p4.x, p4.y
+# (0, 3, 4, 0, 8, 3, 5, 5)
+# 
+# >>> p1.x, p4.y = 4, 10
 # ...
 # TypeError: Point object does not support coordinate assignment
-#
-# >>> p1 = Point(1, 2)
-# >>> p2 = Point(1, 2)
-# >>> p1 == p2
-# True
-# >>> p2 == p1
-# True
-# >>> p3 = Point(0, 0)
-# >>> p2 == p3
-# False
-# >>> p1 != p3
-# True
-# >>> p1 != p2
-# False
-# >>> p1 == (1, 2)
-# False
-
-# >>> p1 = Point(1,1)
-# >>> p2 = Point(2,2)
+# 
+# >>> p0 = Point(0, 3)
+# >>> p1 == p0, p0 == p1, p1 != p0, p0 != p1
+# (True, True, False, False)
+# 
 # >>> l1 = Line(p1, p2)
-# >>> l1.start
-# (1, 1)
-# >>> l1.end
-# (2, 2)
-# >>> l1.length
-# 1.4142135623730951
-# >>> l1.start = Point(3,3)
-# >>> l1.end = Point(10,10)
-# >>> l1.length
-# 9.899494936611665
+# >>> l2 = Line(p2, p3)
+# >>> l3 = Line(p3, p1)
+# >>> l4 = Line(p4, p2)
+# 
 # >>> l1
-# (3, 3)---(10, 10)
-# >>> l1.length = 100
+# (0, 3)---(4, 0)
+# >>> l2
+# (4, 0)---(8, 3)
+# >>> l3
+# (8, 3)---(0, 3)
+# >>> l4
+# (5, 5)---(4, 0)
+# 
+# >>> l1.length, l2.length, l3.length, l4.length
+# (5.0, 5.0, 8.0, 5.0990195135927845)
+# >>> l1.start, l1.end, l2.start, l2.end, l3.start, l3.end
+# ((0, 3), (4, 0), (4, 0), (8, 3), (8, 3), (0, 3))
+# 
+# >>> l1.start = 15
 # ...
-# TypeError: Line object does not support length assignment
-# >>> l1.start = 12
-# ...
-# TypeError: 'start' attribute of 'Line' object supports only 'Point' object assignment
-# >>> l1.end = 12
-# ...
-# TypeError: 'end' attribute of 'Line' object supports only 'Point' object assignment
-# >>> repr(l1) == str(l1)
+# TypeError: 'start' attribute of 'Line'object supports only 'Point'object assignment
+# 
+# >>> polygon1 = Polygon(l1, l2, l3)
+# >>> polygon2 = Polygon(l1, l2, l3, l4)
+# >>> polygon1._is_closed()
 # True
-
-
+# >>> polygon2._is_closed()
+# False
+#
+# >>> polygon1.perimeter
+# 18.0
+# >>> polygon2.perimeter
+# ...
+# ValueError: line items doesn't from a closed plygon
+# >>> polygon1.perimeter = 20
+# ...
+# AttributeError: property 'perimeter' of 'Polygon' object has no setter

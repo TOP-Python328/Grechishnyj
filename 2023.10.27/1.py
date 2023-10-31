@@ -31,6 +31,10 @@ class Point:
 
     def __repr__(self):
         return f'{(self.x, self.y)}'
+    
+    
+    def __str__(self):
+        return repr(self)
 
 
     def __eq__(self, other):
@@ -102,6 +106,10 @@ class Line:
 
     def __repr__(self):
         return(f'{self.start}---{self.end}')
+        
+    
+    def __str__(self):
+        return repr(self)
 
 
 class Polygon(list):

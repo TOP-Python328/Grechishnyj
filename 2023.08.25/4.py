@@ -7,8 +7,8 @@ def repeat(num) -> 'function':
                 func_obj(*args, **kwargs)
         return wrapper
     return decorator
-    
-    
+
+
 # 17:22:10 > python -i 2023.08.25/4.py
 
 # >>> @repeat(5)
@@ -34,3 +34,6 @@ def repeat(num) -> 'function':
 # Python decorators!
 # Python decorators!
 # Python decorators!
+
+
+# ИТОГ: отлично — 3/3

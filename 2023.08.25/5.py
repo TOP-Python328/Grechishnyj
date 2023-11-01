@@ -3,29 +3,21 @@ def logger(func_obj: 'function') -> 'function':
     
     def wrapper(*args, **kwargs):
         """Функция-обёртка, вызывает декорируемую функцию."""
-
-        # ИСПРАВИТЬ: у объекта функции есть два атрибута __defaults__ и __kwdefaults__ — если мы объявляем строго ключевые параметры, то их значения по умолчанию попадают только в __kwdefaults__; а если при этом в строго позиционных и позиционно-ключевых параметрах значений пол умолчанию нет, то в атрибуте __defaults__ будет записан объект None
-        
         kwargs_default = dict()
         if func_obj.__kwdefaults__:
             kwargs_default = dict(func_obj.__kwdefaults__) | dict(kwargs.items())
-            
+        # ИСПРАВИТЬ: разве не может быть значений по умолчанию одновременно у позиционных и ключевых параметров?
         if func_obj.__defaults__:
             kwargs_default = dict(zip(
                 reversed(func_obj.__code__.co_varnames),
                 reversed(func_obj.__defaults__)
             ))
-        
-        # ИСПОЛЬЗОВАТЬ: объект dict_items может быть передан в встроенную функцию reversed() без преобразования
         kwargs_update = kwargs_default | dict(kwargs.items())
-
-        # ИСПОЛЬЗОВАТЬ: lambda функция избыточна
         args_position = tuple(map(str, args))
         args_keywords = tuple(map(
             lambda item: f'{item[0]}={item[1]}',
             kwargs_update.items()
         ))
-
         string_params = ', '.join((*args_position, *args_keywords))
         string_logger = f'{func_obj.__name__}({string_params})'
         
@@ -34,12 +26,11 @@ def logger(func_obj: 'function') -> 'function':
             print(f'{string_logger} -> {result}')
             return result
         except Exception as exception:
-            # ИСПРАВИТЬ: журнал ведётся в stdout — отправьте сообщение туда
             print(f'{string_logger} .. {exception.__class__.__name__}: {exception}')
-            # ИСПРАВИТЬ: при ошибке возвращайте None вместо result
             return None
 
     return wrapper
+
 
 # >>> def div_round(num1, num2, *, digits=0, key=False):
 # ...     return round(num1 / num2, digits)
@@ -73,3 +64,10 @@ def logger(func_obj: 'function') -> 'function':
 # 1
 # >>> div_round(7, 's')
 # div_round(7, s) .. TypeError: unsupported operand type(s) for /: 'int' and 'str'
+
+# КОММЕНТАРИЙ: мало сценариев объявления и вызова декорируемой функции рассмотрено
+
+# СДЕЛАТЬ: изучите пример, запустите тестовые функции со своей реализацией декоратора, найдите ошибки
+
+
+# ИТОГ: неплохо, но можно лучше — 4/7

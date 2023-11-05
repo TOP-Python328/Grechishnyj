@@ -17,20 +17,20 @@ nominals = {
 }
 
 
-def pick_resistors(resistance: int) -> dict[str, tuple[int]] | None:
-    """Функция подбирает ближайшие к переданному номиналы сопротивления из всех рядов сопротивлений"""
-    if 100 > resistance or resistance > 999:
+
+def pick_resistors(resistance: int) -> dict[str, tuple[int, ...]] | None:
+    """Подбирает ближайший к переданному номинал сопротивления из каждого ряда сопротивлений. Подбирает несколько ближайших номиналов, если переданное значение сопротивления находится ровно посередине между несколькими номиналами."""
+    if not 100 <= resistance < 1000:
         return None
-    
-    dict_resistances = dict()
-    for key, value in nominals.items():
-        differenses = tuple(abs(item - resistance) for item in value)
-        find_resistances = tuple(value[i] for i in range(len(differenses)) if differenses[i] == min(differenses))
-        dict_resistances[key] = (find_resistances)
 
-    return dict_resistances
-
-# КОММЕНТАРИЙ: ни разу не были использованы функции высшего порядка — а это здесь основная тема
+    result = {}
+    for label, row in nominals.items():
+        min_diff = min(map(lambda r: abs(r - resistance), row))
+        result[label] = tuple(filter(
+            lambda r: abs(r - resistance) == min_diff,
+            row
+        ))
+    return result
 
 
 # >>> pick_resistors(112)
@@ -38,15 +38,3 @@ def pick_resistors(resistance: int) -> dict[str, tuple[int]] | None:
 
 # >>> pick_resistors(549)
 # {'E6': (470,), 'E12': (560,), 'E24': (560,), 'E48': (536, 562), 'E96': (549,)}
-
-# >>> pick_resistors(200)
-# {'E6': (220,), 'E12': (180, 220), 'E24': (200,), 'E48': (196,), 'E96': (200,)}
-
-# >>> pick_resistors(300)
-# {'E6': (330,), 'E12': (270, 330), 'E24': (300,), 'E48': (301,), 'E96': (301,)}
-
-# >>> print(pick_resistors(1))
-# None
-
-
-# ИТОГ: доработать — 3/6

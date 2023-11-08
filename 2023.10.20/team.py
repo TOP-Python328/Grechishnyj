@@ -1,4 +1,5 @@
-from unit import Unit
+"""
+Класс команда - Team"""
 
 class Team(dict):
     def __init__(self, name_team):
@@ -7,19 +8,14 @@ class Team(dict):
         self.heroes = []
         self['name'] = self.name
         self['heroes'] = self.heroes
-    
-    @property    
-    def get_heroes(self) -> list['Hero']:
-        return self.heroes
-        
-    @get_heroes.setter
-    def set_heroes(self, hero) -> None:
+
+
+    def add(self, hero: 'Hero') -> None:
+        """Добавить в список Героя"""
         self.heroes.append(hero)
-        
-       
 
     
-    def info(self):
+    def info(self) -> str:
+        """Возвращает информацию о команде"""
         return f'{self.__class__.__name__} {self.name}'
-        
-        
+ 

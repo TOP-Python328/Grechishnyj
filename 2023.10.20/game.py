@@ -1,232 +1,230 @@
 from random import choice
 
 from team import Team
+from unit import Unit
 from hero import Hero
-from warriors import Infantry, Archer, Cavalry
+from soldiers import Infantry, Archer, Cavalry 
 
 
+"""Тест игры"""
 
-
+# Создаем Героев (не менее 2-х)
 myrometc = Hero('Илья Муромец')
-nikitich = Hero('Добрыня Никитич')
-popovich = Hero('Алёша Попович')
-gorinich = Hero('Змей Горыныч')
-solovei = Hero('Соловей Разбойник')
+dobrynia = Hero('Добрыня Никитич')
+popovich = Hero('Алеша Попович')
 cheburashka = Hero('Чебурашка')
-
-terminator = Hero('Теминатор')
-spiderman = Hero('Человек Паук')
-superman = Hero('Супермен')
-batman = Hero('Бэтман')
-halk = Hero('Халк')
-mickeymaus = Hero('Микки Маус')
-donalddack = Hero('Дональд Дак')
-
-cheburashka.create_team('ВСРФ')
-cheburashka_team = cheburashka.team
-myrometc.join_team(cheburashka_team)
-nikitich.join_team(cheburashka_team)
-popovich.join_team(cheburashka_team)
-gorinich.join_team(cheburashka_team)
-solovei.join_team(cheburashka_team)
-
-nato = Team('НАТО')
-terminator.join_team(nato)
-spiderman.join_team(nato)
-superman.join_team(nato)
-batman.join_team(nato)
-halk.join_team(nato)
-mickeymaus.join_team(nato)
-donalddack.join_team(nato)
+syperman =  Hero('Супермен')
+spiderman =  Hero('Человек Паук')
+terminator =  Hero('Терминатор')
+donalddack =  Hero('Дональд Дак')
 
 
-for i in range(100):
-    new_archer = Archer()
-    new_archer.join_hero(choice(cheburashka_team.heroes))
+# Любые два Героя создают собственные команды
+cheburashka.create_team('Богатыри')
+donalddack.create_team('Нато')
 
-for i in range(100):
-    new_infantry = Infantry()
-    new_infantry.join_hero(choice(cheburashka_team.heroes))
+# Для удобства создаются итерируемые объекты (объектов)
+# Список героев (будет сортироваться)
+heroes = [myrometc, dobrynia, popovich, cheburashka, syperman, spiderman, terminator, donalddack]
+# Кортеж Команд
+teams = cheburashka.team, donalddack.team
+# Кортеж Солдат
+units = Infantry, Archer, Cavalry
 
-for i in range(100):
-    new_cavalry = Cavalry()
-    new_cavalry.join_hero(choice(cheburashka_team.heroes))
-
-for i in range(100):
-    new_archer = Archer()
-    new_archer.join_hero(choice(nato.heroes))
-
-for i in range(100):
-    new_infantry = Infantry()
-    new_infantry.join_hero(choice(nato.heroes))
-
-for i in range(100):
-    new_cavalry = Cavalry()
-    new_cavalry.join_hero(choice(nato.heroes))
+# Герои добавляются в команды (вручную)
+for unit in myrometc, dobrynia, popovich:
+    unit.join_team(cheburashka.team)
     
-
-cheburashka_team_power = 0
-for hero in cheburashka_team.heroes:
-    cheburashka_team_power += hero.army.attack
-
-nato_team_power = 0
-for hero in nato.heroes:
-    nato_team_power += hero.army.attack
-
-
-for hero in cheburashka_team.heroes:
-    print(f'{hero=}\n\t{hero.army.size=}\n\t{hero.army.attack=}\n\t{hero.army.shield=}\n\t{hero.army.power=}')
+for unit in syperman, spiderman, terminator:
+    unit.join_team(donalddack.team)
     
-for hero in nato.heroes:
-    print(f'{hero=}\n\t{hero.army.size=}\n\t{hero.army.attack=}\n\t{hero.army.shield=}\n\t{hero.army.power=}')
+# Результаты добавления созданных Героев в команды
+print('\nРезультаты добавления созданных Героев в команды\n') 
+print(cheburashka.team.heroes)
+print(donalddack.team.heroes)
 
-# >>> cheburashka.army
-# Archer:
-        # Archer: id=3018034151824
-        # Archer: id=3018034152080
-        # Archer: id=3018034152976
-        # Archer: id=3018034153232
-        # Archer: id=3018034153296
-        # Archer: id=3018034153616
-        # Archer: id=3018034153680
-        # Archer: id=3018034154256
-        # Archer: id=3018034154384
-        # Archer: id=3018034156880
-# Infantry:
-        # Infantry: id=3018034157008
-        # Infantry: id=3018034157136
-        # Infantry: id=3018034157456
-        # Infantry: id=3018034157776
-        # Infantry: id=3018034157840
-        # Infantry: id=3018034159120
-        # Infantry: id=3018034159376
-        # Infantry: id=3018034157712
-        # Infantry: id=3018034160272
-        # Infantry: id=3018034157200
-        # Infantry: id=3018034158096
-        # Infantry: id=3018034161104
-        # Infantry: id=3018034161552
-        # Infantry: id=3018034161616
-        # Infantry: id=3018034162000
-        # Infantry: id=3018034162128
-        # Infantry: id=3018034162832
-# Cavalry:
-        # Cavalry: id=3018034163344
-        # Cavalry: id=3018034164432
-        # Cavalry: id=3018034164944
-        # Cavalry: id=3018034165264
-        # Cavalry: id=3018034165392
-        # Cavalry: id=3018034165648
-        # Cavalry: id=3018034165712
-        # Cavalry: id=3018034166352
-        # Cavalry: id=3018034163856
-        # Cavalry: id=3018034164496
-        # Cavalry: id=3018034166736
-        # Cavalry: id=3018034167760
-        # Cavalry: id=3018034200912
-        # Cavalry: id=3018034201168
-        # Cavalry: id=3018034201360
-        # Cavalry: id=3018034201424
-        # Cavalry: id=3018034201872
-        # Cavalry: id=3018034202128
+# Генерируем 1000 Солдат из возможных вариантов в Кортеже солдат
+# Тут же заставляем сгенерированного солдата вступить в армию Героя (случайный выбор)
+for soldier in range(1000):
+    choice(units)().join_hero(choice(heroes))
+  
+# Сортируем Героев по размеру получившейся армии по убыванию
+heroes.sort(key=lambda hero: hero.army.size, reverse=False)
 
-# >>> cheburashka.army.size
-# 45
-# >>> cheburashka.army.attack
-# 755
+# Смотрим результат сортировки Героев
+print('\n\nСмотрим результат сортировки Героев\n') 
+for hero in heroes:
+    print(f'{hero}: {hero.army.size=}')
 
-# >>> cheburashka_team_power
-# 4500
+# Повышаем уровень Героя в зависимости от размера армии (в обратном порядке)
+# Герою с самой маленькой армией уровень не повышаем (далее +1 по нарастающей)
+for i in range(len(heroes)):
+    heroes[i].update_level(i)
 
-# >>> nato_team_power
-# 4500
+# Результат выполнения после повышения уровней Героям
+print('\n\nРезультат выполнения после повышения уровней Героям\n')    
+for hero in heroes:
+    print(f'{hero}: {hero.level=}')  
 
 
-# hero='Чебурашка'
-        # hero.army.size=35
-        # hero.army.attack=535
-        # hero.army.shield=535
-        # hero.army.power=1070
-# hero='Илья Муромец'
-        # hero.army.size=50
-        # hero.army.attack=780
-        # hero.army.shield=780
-        # hero.army.power=1560
-# hero='Добрыня Никитич'
-        # hero.army.size=59
-        # hero.army.attack=905
-        # hero.army.shield=905
-        # hero.army.power=1810
-# hero='Алёша Попович'
-        # hero.army.size=47
-        # hero.army.attack=705
-        # hero.army.shield=705
-        # hero.army.power=1410
-# hero='Змей Горыныч'
-        # hero.army.size=56
-        # hero.army.attack=790
-        # hero.army.shield=790
-        # hero.army.power=1580
-# hero='Соловей Разбойник'
-        # hero.army.size=53
-        # hero.army.attack=785
-        # hero.army.shield=785
-        # hero.army.power=1570
-# hero='Теминатор'
-        # hero.army.size=38
-        # hero.army.attack=560
-        # hero.army.shield=560
-        # hero.army.power=1120
-# hero='Человек Паук'
-        # hero.army.size=43
-        # hero.army.attack=635
-        # hero.army.shield=635
-        # hero.army.power=1270
-# hero='Супермен'
-        # hero.army.size=34
-        # hero.army.attack=500
-        # hero.army.shield=500
-        # hero.army.power=1000
-# hero='Бэтман'
-        # hero.army.size=41
-        # hero.army.attack=595
-        # hero.army.shield=595
-        # hero.army.power=1190
-# hero='Халк'
-        # hero.army.size=42
-        # hero.army.attack=650
-        # hero.army.shield=650
-        # hero.army.power=1300
-# hero='Микки Маус'
-        # hero.army.size=47
-        # hero.army.attack=675
-        # hero.army.shield=675
-        # hero.army.power=1350
-# hero='Дональд Дак'
-        # hero.army.size=55
-        # hero.army.attack=885
-        # hero.army.shield=885
-        # hero.army.power=1770
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# Складываем результаты команд (сумма показателя уровня каждого героя)
+cheburashka_result_by_level_heroes = 0
+for hero in cheburashka.team.heroes:
+    cheburashka_result_by_level_heroes += hero.level
     
+donalddack_result_by_level_heroes = 0
+for hero in donalddack.team.heroes:
+    donalddack_result_by_level_heroes += hero.level 
+
+# Выводим итоговый результ команд 
+print('\n\nВыводим итоговый результ команд\n')
+print(f'{cheburashka.team.name=} {cheburashka_result_by_level_heroes}')  
+print(f'{donalddack.team.name=} {donalddack_result_by_level_heroes}')   
+
+
+
+# >>> ilya = Hero('Илья Муромец')
+# >>> ilya.army.add_soldier(Archer())
+# >>> ilya.army
+# {'Archer': [Archer id=1849298350160]}
+# >>>
+# >>> arc = Archer()
+# >>> print(arc.team)
+# None
+# >>> arc.join_hero(ilya)
+# >>> print(arc.team)
+# None
+# >>> ilya.create_team('Богатыри')
+# {'name': 'Богатыри', 'heroes': [Илья Муромец id=1849298813200]}
+# >>> arc.team
+# {'name': 'Богатыри', 'heroes': [Илья Муромец id=1849298813200]}
+# >>> ilya.quit_team()
+# >>> arc.team
+# >>> print(arc.team)
+# None
+# >>> alesha = Hero('Алёша Попович')
+# >>> alesha.create_team('Супер Богатыри')
+# {'name': 'Супер Богатыри', 'heroes': [Алёша Попович id=1849298814416]}
+# >>> ilya.join_team(alesha.team)
+# >>> ilya.team
+# {'name': 'Супер Богатыри', 'heroes': [Алёша Попович id=1849298814416, Илья Муромец id=1849298813200]}
+# >>> ilya.army
+# {'Archer': [Archer id=1849298350160, Archer id=1849298814096]}
+# >>> for group in ilya.army.values():
+# ...     for unit in group:
+# ...             print(unit.team)
+# ...
+# {'name': 'Супер Богатыри', 'heroes': [Алёша Попович id=1849298814416, Илья Муромец id=1849298813200]}
+# {'name': 'Супер Богатыри', 'heroes': [Алёша Попович id=1849298814416, Илья Муромец id=1849298813200]}
+
+
+# =================================================================================================================================
+# 1. TECT
+# Результаты добавления созданных Героев в команды
+
+# [Чебурашка id=2770289658960, Илья Муромец id=2770289522640, Добрыня Никитич id=2770289601488, Алеша Попович id=2770289661776]
+# [Дональд Дак id=2770292168144, Супермен id=2770292163664, Человек Паук id=2770292167376, Терминатор id=2770292168080]
+
+
+# Смотрим результат сортировки Героев
+
+# Добрыня Никитич id=2770289601488: hero.army.size=104
+# Человек Паук id=2770292167376: hero.army.size=105
+# Чебурашка id=2770289658960: hero.army.size=114
+# Терминатор id=2770292168080: hero.army.size=128
+# Алеша Попович id=2770289661776: hero.army.size=135
+# Дональд Дак id=2770292168144: hero.army.size=135
+# Супермен id=2770292163664: hero.army.size=137
+# Илья Муромец id=2770289522640: hero.army.size=142
+
+
+# Результат выполнения после повышения уровней Героям
+
+# Добрыня Никитич id=2770289601488: hero.level=0
+# Человек Паук id=2770292167376: hero.level=1
+# Чебурашка id=2770289658960: hero.level=2
+# Терминатор id=2770292168080: hero.level=3
+# Алеша Попович id=2770289661776: hero.level=4
+# Дональд Дак id=2770292168144: hero.level=5
+# Супермен id=2770292163664: hero.level=6
+# Илья Муромец id=2770289522640: hero.level=7
+
+
+# Выводим итоговый результ команд
+
+# cheburashka.team.name='Богатыри' 13
+# donalddack.team.name='Нато' 15
+
+# =================================================================================================================================
+# 2. TECT
+# Результаты добавления созданных Героев в команды
+
+# [Чебурашка id=1983113301072, Илья Муромец id=1983113164752, Добрыня Никитич id=1983113243600, Алеша Попович id=1983113303888]
+# [Дональд Дак id=1983115810256, Супермен id=1983115805776, Человек Паук id=1983115809488, Терминатор id=1983115810192]
+
+
+# Смотрим результат сортировки Героев
+
+# Чебурашка id=1983113301072: hero.army.size=116
+# Алеша Попович id=1983113303888: hero.army.size=118
+# Человек Паук id=1983115809488: hero.army.size=118
+# Терминатор id=1983115810192: hero.army.size=118
+# Илья Муромец id=1983113164752: hero.army.size=123
+# Добрыня Никитич id=1983113243600: hero.army.size=125
+# Дональд Дак id=1983115810256: hero.army.size=137
+# Супермен id=1983115805776: hero.army.size=145
+
+
+# Результат выполнения после повышения уровней Героям
+
+# Чебурашка id=1983113301072: hero.level=0
+# Алеша Попович id=1983113303888: hero.level=1
+# Человек Паук id=1983115809488: hero.level=2
+# Терминатор id=1983115810192: hero.level=3
+# Илья Муромец id=1983113164752: hero.level=4
+# Добрыня Никитич id=1983113243600: hero.level=5
+# Дональд Дак id=1983115810256: hero.level=6
+# Супермен id=1983115805776: hero.level=7
+
+
+# Выводим итоговый результ команд
+
+# cheburashka.team.name='Богатыри' 10
+# donalddack.team.name='Нато' 18
+
+# =================================================================================================================================
+# 3. TECT
+# Результаты добавления созданных Героев в команды
+
+# [Чебурашка id=2032517418064, Илья Муромец id=2032517281744, Добрыня Никитич id=2032517360592, Алеша Попович id=2032517420880]
+# [Дональд Дак id=2032519927248, Супермен id=2032519922768, Человек Паук id=2032519926480, Терминатор id=2032519927184]
+
+
+# Смотрим результат сортировки Героев
+
+# Чебурашка id=2032517418064: hero.army.size=102
+# Илья Муромец id=2032517281744: hero.army.size=117
+# Человек Паук id=2032519926480: hero.army.size=123
+# Алеша Попович id=2032517420880: hero.army.size=126
+# Дональд Дак id=2032519927248: hero.army.size=129
+# Добрыня Никитич id=2032517360592: hero.army.size=131
+# Супермен id=2032519922768: hero.army.size=133
+# Терминатор id=2032519927184: hero.army.size=139
+
+
+# Результат выполнения после повышения уровней Героям
+
+# Чебурашка id=2032517418064: hero.level=0
+# Илья Муромец id=2032517281744: hero.level=1
+# Человек Паук id=2032519926480: hero.level=2
+# Алеша Попович id=2032517420880: hero.level=3
+# Дональд Дак id=2032519927248: hero.level=4
+# Добрыня Никитич id=2032517360592: hero.level=5
+# Супермен id=2032519922768: hero.level=6
+# Терминатор id=2032519927184: hero.level=7
+
+
+# Выводим итоговый результ команд
+
+# cheburashka.team.name='Богатыри' 9
+# donalddack.team.name='Нато' 19

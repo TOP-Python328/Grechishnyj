@@ -1,0 +1,113 @@
+@startuml
+
+hide abstract empty members
+hide class empty members
+
+scale 1.2
+
+abstract Exception
+abstract dict
+
+class AttributeChangeError {
+    +attr_name: str
+    __init__() -> Self
+}
+
+abstract Unit {
+    -__id: int
+    +team: None
+    +health: int
+    __init__() -> Self
+    +id() -> int | AttributeChangeError
+    +is_friend() -> bool
+    __repr__() -> str
+}
+
+class Team {  
+    +name: str
+    +heroes: list
+    __init__(): -> Self
+    +get_heroes() -> list:
+    +set_heroes() -> None:
+    +info() -> str
+}
+
+abstract Warrior {
+    +name: str
+    +power_attack: int
+    +power_shield: int
+    +speed_attack: int
+    +attacked() -> None
+    __init__() -> Self
+}
+
+abstract Worker
+
+class Hero {
+    +name: str
+    +level: int
+    +army: Army
+    +power_attack: int
+    +power_shield: int
+    +speed_attack: int
+    __init__() -> Self
+    +create_team() -> None
+    +join_team() -> None
+    +quit_team() -> None
+    +update_level() -> None
+}
+
+class Army {
+    __init__() -> Self
+    +add_soldier() -> None
+    +size() -> int
+    +attack() -> float
+    +shield() -> float
+    +power() -> float
+}   
+
+
+class Soldier {
+    __init__() -> Self
+    +join_hero() -> None
+}
+
+class Infantry {
+    +power_attack: int
+    +power_shield: int
+    +speed_attack: int
+    __init__() -> Self
+}
+
+class Archer {
+    +power_attack: int
+    +power_shield: int
+    +speed_attack: int
+    __init__() -> Self
+}
+
+class Cavalry {
+    +power_attack: int
+    +power_shield: int
+    +speed_attack: int
+    __init__() -> Self
+}
+
+   
+Exception <|-- AttributeChangeError 
+dict <|-- Army
+dict <|-- Team
+Unit o-left- AttributeChangeError 
+Unit <|-- Warrior
+Unit <|-- Worker
+Warrior <|-- Hero
+Worker <|-- Hero
+Warrior <|-- Soldier
+Army -left-o Hero
+Team o-- Hero
+Hero o-left- Soldier
+Soldier <|-- Infantry
+Soldier <|-- Archer
+Soldier <|-- Cavalry
+
+@enduml

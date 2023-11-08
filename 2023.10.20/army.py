@@ -1,43 +1,40 @@
+# Класс Армия список всех солдат Героя 
+
 class Army(dict):
-    """армия"""
+    """Армия"""
     def __init__(self):
         super().__init__()
         
-    def add(self, soldier):
+    # Дабавляет в словарь солдата (ключ - тип Воина, здачение экземпляр класс Воин)
+    def add_soldier(self, soldier: [str, 'Warrior']) -> None:
+        """Добавить солдата"""
         if not soldier.__class__.__name__ in self:
             self[soldier.__class__.__name__] = [soldier]
         else:
             self[soldier.__class__.__name__] += [soldier]
 
-    
+    # Численность армии - количество всех солдат в армии
     @property
-    def size(self):
+    def size(self) -> int:
         """Численность армии"""
         return sum(len(soldiers) for soldiers in self.values())
     
     
     @property
-    def attack(self):
+    def attack(self) -> float:
         """Сила атаки армии"""
         return sum(sum(soldier.power_attack for soldier in soldiers) for soldiers in self.values())
 
     
     @property
-    def shield(self):
+    def shield(self) -> float:
         """Уровень защиты армии"""
         return sum(sum(soldier.power_shield for soldier in soldiers) for soldiers in self.values())
 
 
     @property
-    def power(self):
+    def power(self) -> float:
         """Общая мощь армии"""
         return self.attack + self.shield
         
         
-    def __repr__(self):
-        string = ''
-        for key, values in self.items():
-            string += f'{key}:\n'
-            for unit in values:
-                string += f'\t{unit}\n'
-        return string

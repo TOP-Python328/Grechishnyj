@@ -49,9 +49,7 @@ class Unit:
     # Проверка на дружбу с юнитом
     def is_friend(self, other: Self) -> bool:
         """Проверка - является ли второй юнит другом(врагом) или нет"""
-        if self.team is other.team:
-            return True
-        return False
+        return self.team is other.team
    
     # Выбытие смерть юнита при значении атрибута health=0 
     # Не реализовано...

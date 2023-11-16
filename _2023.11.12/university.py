@@ -14,13 +14,12 @@ from typing import Self
 @dataclass
 class Contact:
     """Контактные данные"""
-    
-    mobile: str = ''
-    office: str = ''
-    email: str = ''
-    web: str = ''
-    telegram: str = ''
-   
+    mobile: str = None
+    office: str = None
+    email: str = None
+    web: str = None
+    telegram: str = None
+
 
 class Person:
     """Персона"""
@@ -29,18 +28,18 @@ class Person:
             self,
             last_name: str,
             first_name: str,
-            patr_name: str = '',
+            patr_name: str,
             birthdate: dt = None,
-            contact: Contact = None,
+            contacts: Contact = None,
     ):
         self.last_name = last_name
         self.first_name = first_name
         self.patr_name = patr_name
         self.birthdate = birthdate
-        self.contact = Contact
+        self.contacts = Contact
         
-    def __repr__(self):
-        return f'{self.__class__.__name__} {self.last_name} {self.first_name[:1]}. id={id(self)}'
+    # def __repr__(self):
+        # return f'{self.__class__.__name__} {self.last_name} id={id(self)}'
   
     
 class Employee(Person):
@@ -51,8 +50,8 @@ class Employee(Person):
             last_name,
             first_name,
             patr_name,
-            position: str = '',
-            income: dec = 0,
+            position: str = None,
+            income: dec = None,
     ):
         super().__init__(last_name, first_name, patr_name)
         self.position = position
@@ -63,15 +62,63 @@ class Employee(Person):
         """Ежемесячный доход"""
         pass
 
+class Student(Person):
+    """Студент"""
+    
+    class EducationForm(Enum):
+        """Форма обучения"""
+        
+        INTRAMURAL = 'очная'
+        EXTRAMURAL = 'заочная'
+        REMOTE = 'удаленная'
+        
+        def __repr__(self):
+            return f'{self.__dict__["_value_"]}'
+        
+    class ContractForm(Enum):
+        """Форма договора"""
+        
+        BUDGET = 'бюджетный'
+        COMPANY = 'целевой'
+        PERSONAL = 'персональный'
+        
+        def __repr__(self):
+            return f'{self.__dict__["_value_"]}'
+    
+    def __init__(
+            self,
+            last_name,
+            first_name,
+            patr_name,
+            form: EducationForm = EducationForm.INTRAMURAL,
+            contract: ContractForm = ContractForm.BUDGET,
+            semester: int = 1,
+            stipendia: dec = 0
+    ):
+        super().__init__(last_name, first_name, patr_name)
+        self.id_ = str(id(self))
+        self.form = form
+        self.contract = contract
+        self.semester = semester
+        self.gradebook = Gratebook()
+        self._stipendia = stipendia
+    
+    
+    def stipendia(self, new_stipendia) -> None:
+        """Стипендия - getter"""
+        self._stipendia = new_stipendia
+    stipendia = property(fset = stipendia)
 
 class Teacher(Employee):
     """Преподаватель"""
     
     class Degree(Enum):
         """Ученая степень"""
-        
         CANDIDATE = 'кандидат'
         DOCTOR = 'доктор'
+        
+        def __repr__(self):
+            return f'{self.__dict__["_value_"]}'
     
     def __init__(
             self,
@@ -81,7 +128,7 @@ class Teacher(Employee):
             position,
             income, 
             courses: list[str] = [],
-            degree: Degree = None,
+            degree: Degree = Degree.CANDIDATE,
             professor: bool = False
     ):
         super().__init__(last_name, first_name, patr_name, position, income)
@@ -91,9 +138,12 @@ class Teacher(Employee):
         
     def calc_month_income(self) -> dec:
         """Расчёт оплаты труда - часы, научная степень, доп работа"""
+        pass
         
         
-    def make_examination(self) -> 'Cratebook.GradeRecord':
+    def make_examination(self, student: Student) -> 'Cratebook.GradeRecord':
+        """Провести экзамен - сделать запись в зачётной книжке"""
+        student.gratebook[self.courses]
         pass
 
 
@@ -108,7 +158,7 @@ class Administrator(Employee):
             position,
             income,
             head: Self = None,
-            subordinates: list[Employee] = None
+            subordinates: list[Employee] = []
     ):
         super().__init__(last_name, first_name, patr_name, position, income)
         self.head = head
@@ -122,7 +172,6 @@ class Administrator(Employee):
 
 class Gratebook(dict):
     """Зачётная книжка"""
-    # str: GrateRecord
     
     @dataclass
     class GrateRecord:
@@ -135,16 +184,15 @@ class Gratebook(dict):
             EXAMEN = 'экзамен'
             PROJECT = 'проект'
 
-        semester: int = 0
+        semester: int = None
         date: date = None
         _type: ExamType = ExamType.CHECK
-        grade: int = 0
+        grade: int = None
         scale: int = 5
         examiner: Teacher = None
     
     def __init__(
             self,
-            id_: str,
             records: dict[str, GrateRecord] = {}
     ):
         self.id_ = str(id(self))
@@ -155,47 +203,7 @@ class Gratebook(dict):
         pass
     
 
-class Student(Person):
-    """Студент"""
-    
-    class EducationForm(Enum):
-        """Форма обучения"""
-        
-        INTRAMURAL = 'очная'
-        EXTRAMURAL = 'заочная'
-        REMOTE = 'удаленная'
-        
-    class ContractForm(Enum):
-        """Форма договора"""
-        
-        BUDGET = 'бюджетный'
-        COMPANY = 'целевой'
-        PERSONAL = 'персональный'
-    
-    def __init__(
-            self,
-            last_name,
-            first_name,
-            id_: str = '',
-            form: EducationForm = EducationForm.INTRAMURAL,
-            contract: ContractForm = ContractForm.BUDGET,
-            semester: int = 0,
-            gradebook: 'Gradebook' = None,
-            stipendia: dec = 0
-    ):
-        super().__init__(last_name, first_name)
-        self.id_ = str(id(self))
-        self.form = form
-        self.contract = contract
-        self.semester = semester
-        self.gradebook = gradebook
-        self._stipendia = stipendia
-    
-    
-    def stipendia(self, new_stipendia) -> None:
-        """Стипендия - getter"""
-        self._stipendia = new_stipendia
-    stipendia = property(fset = stipendia)
+
  
 
 
@@ -226,6 +234,14 @@ class OrganizationLevel(list):
         """Персонал - getter"""
         self._staff = new_people
     staff = property(fset = staff)
+    
+    # def __repr__(self):
+        # return f'{self.__class__.__name__} {id(self)}'
+    
+    
+    
+
+    
 
 
 class Group(list):
@@ -245,7 +261,7 @@ class Group(list):
         
         
 @dataclass
-class Auditorium(Enum):
+class Auditorium:
     """Аудитория"""
     
     number: str = ''
@@ -259,10 +275,10 @@ class Department(OrganizationLevel):
     def __init__(
             self,
             title,
-            description,
-            head,
-            staff,
-            contact,
+            description = None,
+            head = None,
+            staff = None,
+            contact = None,
             teachers: list[Teacher] = [],
             auditoria: list[Auditorium] = []
     ):
@@ -277,10 +293,10 @@ class Faculty(OrganizationLevel):
     def __init__(
             self,
             title,
-            description,
-            head,
-            staff,
-            contact,
+            description = None,
+            head = None,
+            staff = None,
+            contact = None,
             departments: list[Department] = []
     ): 
         super().__init__(title, description, head, staff, contact)
@@ -302,8 +318,8 @@ class HR(OrganizationLevel):
     """Human Resources"""
 
 
-    def __init__(self): 
-        super().__init__()
+    def __init__(self, title): 
+        super().__init__(title)
 
 
     def hire(self):
@@ -322,18 +338,17 @@ class University(OrganizationLevel):
             self,
             title,
             description,
-            head,
-            staff,
-            contact,
+            head = None,
+            staff = None,
+            contact = None,
             facultets: list[Faculty] = [],
-            hr: HR = None
+            hr = None
     ):
         super().__init__(title, description, head, staff, contact)
         self.facultets = facultets
         self.hr = hr
 
-    def change_head() -> None:
+    def change_head(self, person: Administrator) -> None:
         """Выбрать управляющего"""
-        pass
-
+        self.head = person
 

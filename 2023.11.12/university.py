@@ -19,29 +19,29 @@ class Contact:
     email: str = None
     web: str = None
     telegram: str = None
-
-
-class Person:
-    """Персона"""
+    
+    
+class Person(ABC):
+    """Персона (человек)"""
     
     def __init__(
             self,
             last_name: str,
             first_name: str,
             patr_name: str,
-            birthdate: dt = None,
-            contacts: Contact = None,
+            birthdate: dt,
+            contact: Contact = None,
     ):
         self.last_name = last_name
         self.first_name = first_name
         self.patr_name = patr_name
         self.birthdate = birthdate
-        self.contacts = Contact
-        
-    # def __repr__(self):
-        # return f'{self.__class__.__name__} {self.last_name} id={id(self)}'
-  
-    
+        self.contact = Contact
+
+    def __repr__(self):
+        return f'{self.__class__.__name__} {self.last_name} {self.first_name[0]}. id={id(self)}'
+
+
 class Employee(Person):
     """Работник"""
     
@@ -50,10 +50,12 @@ class Employee(Person):
             last_name,
             first_name,
             patr_name,
+            birthdate: dt,
+            contact: Contact = None,
             position: str = None,
-            income: dec = None,
+            income: dec = 1,
     ):
-        super().__init__(last_name, first_name, patr_name)
+        super().__init__(last_name, first_name, patr_name, birthdate, contact)
         self.position = position
         self.income = income
     
@@ -61,6 +63,7 @@ class Employee(Person):
     def calc_month_income(self) -> dec:
         """Ежемесячный доход"""
         pass
+
 
 class Student(Person):
     """Студент"""
@@ -90,12 +93,14 @@ class Student(Person):
             last_name,
             first_name,
             patr_name,
+            birthdate: dt,
+            contact: Contact = None,
             form: EducationForm = EducationForm.INTRAMURAL,
             contract: ContractForm = ContractForm.BUDGET,
             semester: int = 1,
-            stipendia: dec = 0
+            stipendia: dec = 1
     ):
-        super().__init__(last_name, first_name, patr_name)
+        super().__init__(last_name, first_name, patr_name, birthdate, contact)
         self.id_ = str(id(self))
         self.form = form
         self.contract = contract
@@ -105,9 +110,10 @@ class Student(Person):
     
     
     def stipendia(self, new_stipendia) -> None:
-        """Стипендия - getter"""
+        """Стипендия - setter"""
         self._stipendia = new_stipendia
     stipendia = property(fset = stipendia)
+
 
 class Teacher(Employee):
     """Преподаватель"""
@@ -125,13 +131,23 @@ class Teacher(Employee):
             last_name,
             first_name,
             patr_name,
-            position,
-            income, 
+            birthdate: dt,
+            contact: Contact = None,
+            position: str = None,
+            income: str = 1, 
             courses: list[str] = [],
             degree: Degree = Degree.CANDIDATE,
             professor: bool = False
     ):
-        super().__init__(last_name, first_name, patr_name, position, income)
+        super().__init__(
+            last_name, 
+            first_name, 
+            patr_name, 
+            birthdate, 
+            contact, 
+            position, 
+            income
+        )
         self.courses = courses
         self.degree = degree
         self.professor = professor
@@ -155,12 +171,22 @@ class Administrator(Employee):
             last_name,
             first_name,
             patr_name,
-            position,
-            income,
+            birthdate: dt,
+            contact: Contact = None,
+            position: str = None,
+            income: str = 1, 
             head: Self = None,
             subordinates: list[Employee] = []
     ):
-        super().__init__(last_name, first_name, patr_name, position, income)
+        super().__init__(
+            last_name, 
+            first_name, 
+            patr_name,
+            birthdate, 
+            contact,             
+            position, 
+            income
+        )
         self.head = head
         self.subordinates = subordinates
     
@@ -169,7 +195,8 @@ class Administrator(Employee):
         """Расчёт оплаты труда - оклад + премия"""
         pass
 
-
+        
+    
 class Gratebook(dict):
     """Зачётная книжка"""
     
@@ -201,10 +228,6 @@ class Gratebook(dict):
     def avg_semester_grade(self) -> float:
         """Средняя оценка за семестр"""
         pass
-    
-
-
- 
 
 
 # ===============================================================
@@ -231,19 +254,11 @@ class OrganizationLevel(list):
         self.contact = contact
         
     def staff(self, new_people) -> None:
-        """Персонал - getter"""
+        """Персонал - setter"""
         self._staff = new_people
     staff = property(fset = staff)
     
-    # def __repr__(self):
-        # return f'{self.__class__.__name__} {id(self)}'
     
-    
-    
-
-    
-
-
 class Group(list):
     """Учебная группа"""
     
@@ -252,14 +267,12 @@ class Group(list):
             id_: str = '',
             chief: Student = None,
             curator: Teacher = None,
-            students: list[Student] = []
     ):
         self.id_ = str(id(self))
         self.chief = chief
         self.curator = curator
-        self.students = students
-        
-        
+
+
 @dataclass
 class Auditorium:
     """Аудитория"""
@@ -267,7 +280,7 @@ class Auditorium:
     number: str = ''
     seats: int = 0
     building: str = 0
-
+    
     
 class Department(OrganizationLevel):
     """Кафедра"""
@@ -297,10 +310,8 @@ class Faculty(OrganizationLevel):
             head = None,
             staff = None,
             contact = None,
-            departments: list[Department] = []
     ): 
         super().__init__(title, description, head, staff, contact)
-        self.departments = departments
 
 
     def enroll_student(self) -> None:
@@ -311,8 +322,8 @@ class Faculty(OrganizationLevel):
     def expel_student(self) -> None:
         """Отчислить студента"""
         pass
-
-
+        
+        
 # @singleton
 class HR(OrganizationLevel):
     """Human Resources"""
@@ -337,18 +348,15 @@ class University(OrganizationLevel):
     def __init__(
             self,
             title,
-            description,
+            description = None,
             head = None,
             staff = None,
             contact = None,
-            facultets: list[Faculty] = [],
             hr = None
     ):
         super().__init__(title, description, head, staff, contact)
-        self.facultets = facultets
         self.hr = hr
 
     def change_head(self, person: Administrator) -> None:
         """Выбрать управляющего"""
         self.head = person
-

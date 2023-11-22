@@ -252,11 +252,19 @@ class OrganizationLevel(list):
         self.head = head
         self._staff = staff
         self.contact = contact
-        
-    def staff(self, new_people) -> None:
+    
+    @property    
+    def staff(self) -> list:
         """Персонал - setter"""
-        self._staff = new_people
-    staff = property(fset = staff)
+        return self._staff
+    
+    @staff.setter
+    def staff(self, human) -> None:
+        """Персонал - getter"""
+        self._staff.append(human)
+        
+    def __repr__(self):
+        return f'{self.title}'
     
     
 class Group(list):
@@ -290,7 +298,7 @@ class Department(OrganizationLevel):
             title,
             description = None,
             head = None,
-            staff = None,
+            staff = [],
             contact = None,
             teachers: list[Teacher] = [],
             auditoria: list[Auditorium] = []
@@ -308,10 +316,12 @@ class Faculty(OrganizationLevel):
             title,
             description = None,
             head = None,
-            staff = None,
+            staff = [],
             contact = None,
+            departments: list[Department] = []
     ): 
         super().__init__(title, description, head, staff, contact)
+        self.departments = departments
 
 
     def enroll_student(self) -> None:
@@ -350,12 +360,14 @@ class University(OrganizationLevel):
             title,
             description = None,
             head = None,
-            staff = None,
+            _staff = [],
             contact = None,
-            hr = None
+            hr = None,
+            facultets: list[Faculty] = [],
     ):
-        super().__init__(title, description, head, staff, contact)
+        super().__init__(title, description, head, _staff, contact)
         self.hr = hr
+        self.facultets = facultets
 
     def change_head(self, person: Administrator) -> None:
         """Выбрать управляющего"""

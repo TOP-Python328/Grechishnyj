@@ -2,29 +2,32 @@
 
 from typing import Self
 
-class Class:
-    """Шаблон класса без полей"""
-    
+class ClassBuilder:
+    """Строитель для формирования текста кода класса"""
     
     def __init__(self, name: str):
-        self.name = name
-        self.docstring: str = ''
+        self.name: str = name
+        self.__docstring: str = ''
         self.__fields: dict[str, str] = {}
         self.__constructor: dict[str, str] = {}
-        
-        # self.docstring: str = 'docstring'
-        # self.__fields: dict[str, str] = {'1':'2', '3':'None'}
-        # self.__constructor: dict[str, str] = {'attr1':'attr1', 'attr2':'attr2'}
-    
+
+
+    def docstring(self, docstring) -> None:
+        """Устанавливает docstring для класса"""
+        self.__docstring = docstring
+        return self
+
     def fields(self, key: str, value: str = 'None') -> None:
         """Добавляет поле в список(словарь) полей класса"""
         self.__fields[key] = value
+        return self
 
 
     def constructor(self, key: str, value: str = 'None') -> None:
         """Добавляет атрибут в список(словарь) конструктора класса"""
         self.__constructor[key] = value
-    
+        return self
+
     
     def __str(self) -> str:
         """Текстовое представление класса"""
@@ -35,8 +38,8 @@ class Class:
         fields = f"{space}pass"
         constructor = ''
         
-        if self.docstring:
-            docstring = f'{space}\"\"\"{self.docstring}\"\"\"{line}'
+        if self.__docstring:
+            docstring = f'{space}\"\"\"{self.__docstring}\"\"\"{line}'
 
         if self.__fields:
             fields = f'{line}'.join(
@@ -51,32 +54,35 @@ class Class:
                 constructor = f'{line}{constructor}'
 
         return f'class {name}{docstring}{fields}{constructor}'
-        
+
     def __str__(self):
-        return self.__str()
+        return self.__str() 
+        
+        
+# >>> c = ClassBuilder('Root')\
+# ... .docstring('test docstring')\
+# ... .fields('field1')\
+# ... .fields('field2')\
+# ... .fields('field3')\
+# ... .fields('field4')\
+# ... .fields('field5')\
+# ... .constructor('attr1')\
+# ... .constructor('attr2')\
+# ... .constructor('attr3')\
+# ... .constructor('attr4')\
+# ... .constructor('attr2')\
+# ...
+# >>> print(c)
+# class Root:
+    # """test docstring"""
+    # field1 = None
+    # field2 = None
+    # field3 = None
+    # field4 = None
+    # field5 = None
 
-
-
-
-
-class ClassBuilder:
-    """Формирует текст кода класса"""
-    
-    def __init__(self, name):
-        self.class_ = Class(name)
-    
-
-    def add_cls_field(self, field_name: str, field_value: str = 'None'):
-        """Добавляет поле класс"""
-        self.class_.fields(field_name, field_value)
-        return self
-
-
-    def add_inst_attr(self, attr_name: str, attr_value: str = 'None'):
-        """Добавляет атрибут в конструктор экземпляра"""
-        self.class_.constructor(attr_name, attr_value)
-        return self
-
-
-    def build(self) -> Class:
-        return self.class_
+    # def __init__(self)
+        # self.attr1 = None
+        # self.attr2 = None
+        # self.attr3 = None
+        # self.attr4 = None

@@ -13,9 +13,8 @@ class CLSTemplate {
     #fields: <i>dict[str, str]</i>
     #constructor: <i>dict[str, str]</i>
     #inherits: <i>list[str]</i>
-    --setters--
-    +docstring() -> <i>None</i>
     --methods--
+    +docstring() -> <i>None</i>
     +fields() -> <i>None</i>
     +constructor() -> <i>None</i>
     +inherits() -> <i>None</i>

@@ -8,7 +8,10 @@ class CLSTemplate:
     line: str = '\n' 
 
     def __init__(self, name: str):
-        self.name: str = name.title()
+        if name[0].islower():
+            name = name.title()
+        self.name: str = name
+        print(self.name)
         self.__docstring: str = ''
         self.__fields: dict[str, str] = {}
         self.__constructor: dict[str, str] = {}
@@ -28,8 +31,8 @@ class CLSTemplate:
 
     def inherits(self, class_name: str) -> None:
         """Добавляет в список имя родительского класса от которого наследован текущий"""
-        class_name = str(class_name)
-        class_name = class_name[0].title() + class_name[1:]
+        if class_name[0].islower():
+            class_name = class_name.title()
         self.__inherits.append(class_name)
     
     @staticmethod
@@ -106,7 +109,7 @@ class ClassBuilder:
 # ... .build()
 # >>>
 # >>> print(cls)
-# class Testtemplate:
+# class TestTemplate:
     # pass
 # >>>
 # >>> cls = CLSTemplate.create('TestTemplate')\
@@ -124,7 +127,7 @@ class ClassBuilder:
 # >>>
 # >>>
 # >>> print(cls)
-# class Testtemplate(Cls, Tmp):
+# class TestTemplate(Cls, Tmp):
     # """Test docstring"""
     # field_1 = None
     # field_2 = []
@@ -154,7 +157,7 @@ class ClassBuilder:
 # >>>
 # >>>
 # >>> print(bld)
-# class Testbuilder(Cls, Tmp):
+# class TestBuilder(Cls, Tmp):
     # """Test docstring"""
     # field_1 = None
     # field_2 = []

@@ -1,0 +1,43 @@
+@startuml
+
+scale 1.5
+
+title Pattern Builder
+
+class CLSTemplate {
+    +space: <i>str</i>
+    +line: <i>str</i>
+    --instance--
+    +name: <i>str</i>
+    #docstring: <i>str</i>
+    #fields: <i>dict[str, str]</i>
+    #constructor: <i>dict[str, str]</i>
+    #inherits: <i>list[str]</i>
+    --setters--
+    +docstring() -> <i>None</i>
+    --methods--
+    +fields() -> <i>None</i>
+    +constructor() -> <i>None</i>
+    +inherits() -> <i>None</i>
+    +{static}create() -> ClassBuilder
+    --special--
+    __init__() -> <i>None</i>
+    __str__() -> <i>str</i>
+}
+
+class ClassBuilder{
+    --instance--
+    +root: <i>str</i> | CLSTemplate
+    --methods--
+    +add_docstring() -> ClassBuilder
+    +add_class_field() -> ClassBuilder
+    +add_instance_attr() -> ClassBuilder
+    +build() -> CLSTemplate
+    --special--
+    __init__() -> <i>None</i>:
+}
+
+CLSTemplate o-left- ClassBuilder
+ClassBuilder o-- CLSTemplate
+
+@enduml

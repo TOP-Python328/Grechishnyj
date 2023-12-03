@@ -31,6 +31,7 @@ class ClassBuilder{
     +add_docstring() -> ClassBuilder
     +add_class_field() -> ClassBuilder
     +add_instance_attr() -> ClassBuilder
+    +add_inherit() -> ClassBuilder
     +build() -> CLSTemplate
     --special--
     __init__() -> <i>None</i>:

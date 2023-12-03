@@ -61,22 +61,33 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
 
-@dataclass
-class About:
-    """Описывает раздел о себе
+
+class About(dict):
+    """Описывает раздел о себе.
     
     :param full_name: фио - полное имя
-    :param age: возрастом
+    :param age: возраст
     :param employment: сфера деятельности
     """
-    full_name: str = None
-    age: int = None
-    employment: str = None
+    def __init__(self, full_name: str = None, age: int = None, employment: str = None):
+        self['full_name'] = full_name
+        self['age'] = age
+        self['employment'] = employment
+        self['picture'] = None
+
+
+class Contact(dict):
+    """Описывает раздел контактов."""
+    def __init__(self, email: str = None, mobile: str = None, web: str = None, telegram: str = None):
+        self['mobile'] = mobile
+        self['email'] = email
+        self['web'] = web
+        self['telegram'] = telegram 
 
 
 @dataclass
 class Study:
-    """Описывает раздел с образованием
+    """Описывает учебное заведение.
 
     :param institution: учебное заведение
     :param specialization: специальность
@@ -89,7 +100,7 @@ class Study:
 
 @dataclass
 class Project:
-    """Описывае раздел с успешными работами/проектами
+    """Описывае  работу/проект.
     
     :param name: наименование проекта
     :param images: список путей к изображениям
@@ -98,21 +109,10 @@ class Project:
     name: str = None
     images: list[str] = None
     link: str = None
-
-@dataclass
-class Contact:
-    """Описывает раздел с произвольным набором полей контактов"""
-    mobile: str = None
-    email: str = None
-    web: str = None
-    telegram: str = None
     
 
 class HTMLProfile:
     """HTML документ - портфолио человека."""
-    # обязательный раздел с произвольным набором полей контактов (email обязателен)
-    # 'Иванов Иван Иванович', 26, 'художник-фрилансер', 'ivv@abc.de'
-    
     def __init__(
             self, 
             full_name: str, 
@@ -120,48 +120,43 @@ class HTMLProfile:
             employment: str = None, 
             email: str = None
     ):
-        self.about: About = About()
-        self.about.full_name = full_name
-        self.about.age = age
-        self.about.employment = employment
+        self.about: About = About(full_name, age, employment)
         self.education: list[Study] = []
         self.projects: list[Project] = []
-        self.contacts: Contact = Contact()   
-        self.contacts.email = email
-
+        self.contacts: Contact = Contact(email)   
 
     def new_about(self, field_name: str, field_value: str) -> None:
-        """Редактор раздела о себе"""
-        setattr(self.about, field_name, field_value)
+        """Добавить(изменить) запись в разделе о себе."""
+        self.about[field_name] = field_value
 
-   
     def new_contact(self, field_name: str, field_value: str) -> None:
-        """Редактор раздела контактов"""
-        setattr(self.contacts, field_name, field_value)
-
+        """Добавить(изменить) запись в разделе контакты."""
+        self.contacts[field_name] = field_value
 
     def new_education(self, institution: str, specialization: str, graduation: int) -> None:
-        """Добавляет в раздел образования новое учебное заведение"""
+        """Добавляет в раздел образования учебное заведение."""
         study = Study()
         study.institution = institution
         study.specialization = specialization
         study.graduation = graduation
         self.education.append(study)
 
- 
     def new_project(self, name: str, link: str = None, *images: list[str]) -> None:
-        """Добавляет в раздел проектов новый проект"""
+        """Добавляет в раздел проектов проект."""
         project = Project()
         project.name = name
         project.link = link
         project.images = [images]
         self.projects.append(project)
 
-
     @staticmethod
     def create(name: str) -> 'CVProfiler':
+        """Возвращает строитель класса для создания нового экземпляра"""
         return CVProfiler(name)
  
+    def edit(self: Self) -> 'CVProfiler':
+        """Возвращает строитель класса передавая ему себя."""
+        return CVProfiler(self)
     
 class CVProfiler:
     
@@ -173,12 +168,11 @@ class CVProfiler:
             email: str = None
     ) -> None:
         if isinstance(root, HTMLProfile):
-            pass
+            self.root = root
         elif isinstance(root, str):
             self.root = HTMLProfile(root, age, employment, email)
         else:
             raise TypeError('use HTMLProfile or str instance for root parameter')
-
 
     def add_about(self, name: str, value: str) -> Self:
         self.root.new_about(name, value)
@@ -188,65 +182,66 @@ class CVProfiler:
         self.root.new_contact(name, value)
         return self
 
-
     def add_education(self, institution: str, specialization: str, graduation: int) -> Self:
         self.root.new_education(institution, specialization, graduation)
         return self
-
 
     def add_project(self, name: str, link: str = None, *images: list[str]) -> Self:
         self.root.new_project(name, link, *images)
         return self
 
-
     def build(self) -> HTMLProfile:
         return self.root
     
-
 
 # >>> prof = HTMLProfile.create('Иванов Иван Иванович')\
 # ... .add_contact('mobile', '+79050000000')\
 # ... .add_contact('whatsapp', '+79050000000')\
 # ... .add_education('university', 'special', 2010)\
 # ... .add_education('university2', 'special2', 2016)\
-# ... .add_project('project', 'link1', 'img', 'img')\
+# ... .add_project('project1', 'link1', 'img', 'img')\
 # ... .add_project('project2', 'link2', 'img', 'img')\
-# ... .add_about('age', 30)\
-# ... .add_about('email', 'emaol@ya.ru')\
 # ... .build()
 # >>>
-# >>> prof.__dict__
-# {
-    # 'about': About(full_name='Иванов Иван Иванович', age=30, employment=None), 
-    # 'education': [
-        # Study(institution='unaversity', specialization='special', graduation=2010),
-        # Study(institution='unaversity2', specialization='special2', graduation=2016)],
-    # 'projects': [
-        # Project(name='project', images=[('img', 'img')], link='link1'), 
-        # Project(name='project2', images=[('img', 'img')], link='link2')],
-    # 'contacts': Contact(mobile='+79050000000', email=None, web=None, telegram=None)
-# }
+# >>>
+# >>>
+# >>> for item in prof.__dict__.items():
+# ...     print(item)
+# ...
+# ('about', {'full_name': 'Иванов Иван Иванович', 'age': None, 'employment': None, 'picture': None})
+# ('education', [Study(institution='university', specialization='special', graduation=2010), Study(institution='university2', specialization='special2', graduation=2016)])
+# ('projects', [Project(name='project1', images=[('img', 'img')], link='link1'), Project(name='project2', images=[('img', 'img')], link='link2')])
+# ('contacts', {'mobile': '+79050000000', 'email': None, 'web': None, 'telegram': None, 'whatsapp': '+79050000000'})
+# >>>
+# >>>
+# >>>
+# >>> prof.edit().add_about('age', 30).build()
+# <__main__.HTMLProfile object at 0x000001E3E05D54D0>
+# >>> for item in prof.__dict__.items():
+# ...     print(item)
+# ...
+# ('about', {'full_name': 'Иванов Иван Иванович', 'age': 30, 'employment': None, 'picture': None})
+# ('education', [Study(institution='university', specialization='special', graduation=2010), Study(institution='university2', specialization='special2', graduation=2016)])
+# ('projects', [Project(name='project1', images=[('img', 'img')], link='link1'), Project(name='project2', images=[('img', 'img')], link='link2')])
+# ('contacts', {'mobile': '+79050000000', 'email': None, 'web': None, 'telegram': None, 'whatsapp': '+79050000000'})
+# >>>
+# >>>
 # >>>
 # >>> prof = CVProfiler('Иванов Иван Иванович')\
 # ... .add_contact('mobile', '+79050000000')\
 # ... .add_contact('whatsapp', '+79050000000')\
 # ... .add_education('university', 'special', 2010)\
 # ... .add_education('university2', 'special2', 2016)\
-# ... .add_project('project', 'link1', 'img', 'img')\
+# ... .add_project('project1', 'link1', 'img', 'img')\
 # ... .add_project('project2', 'link2', 'img', 'img')\
-# ... .add_about('age', 30)\
-# ... .add_about('email', 'emaol@ya.ru')\
 # ... .build()
 # >>>
-# >>> prof.__dict__
-# {
-    # 'about': About(full_name='Иванов Иван Иванович', age=30, employment=None), 
-    # 'education': [
-        # Study(institution='unaversity', specialization='special', graduation=2010), 
-        # Study(institution='unaversity2', specialization='special2', graduation=2016)], 
-    # 'projects': [
-        # Project(name='project', images=[('img', 'img')], link='link1'), 
-        # Project(name='project2', images=[('img', 'img')], link='link2')], 
-    # 'contacts': Contact(mobile='+79050000000', email=None, web=None, telegram=None)
-# }
 # >>>
+# >>>
+# >>> for item in prof.__dict__.items():
+# ...     print(item)
+# ...
+# ('about', {'full_name': 'Иванов Иван Иванович', 'age': None, 'employment': None, 'picture': None})
+# ('education', [Study(institution='university', specialization='special', graduation=2010), Study(institution='university2', specialization='special2', graduation=2016)])
+# ('projects', [Project(name='project1', images=[('img', 'img')], link='link1'), Project(name='project2', images=[('img', 'img')], link='link2')])
+# ('contacts', {'mobile': '+79050000000', 'email': None, 'web': None, 'telegram': None, 'whatsapp': '+79050000000'})

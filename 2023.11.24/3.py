@@ -1,65 +1,8 @@
-# Реализуйте класс, HTMLProfile описывающий HTML документ портфолио человека.
-# Добавьте класс Строителя CVProfiler для генерации такого HTML документа.
-# Воспользуйтесь реализованными в предыдущей задаче классами HTMLTag и HTMLBuilder.
-
-# Класс должен предоставить возможность добавить:
-  # — обязательный раздел с фио, возрастом, и сферой занятости
-  # — необязательный раздел с образованием (учебное заведение, специальность, год окончания)
-  # — необязательный раздел с успешными работами/проектами
-  # — обязательный раздел с произвольным набором полей контактов (email обязателен)
-
-# В случае появления пункта из необязательного раздела, у этого раздела должен быть подзаголовок. 
-# Если для раздела не заявлено ни одного пункта, то подзаголовок опускается.
-
-# Добавьте к строителю метод build(), который вернёт сформированный объект.
-
-# Реализуйте минимальную вёрстку.
-
-# Человекочитаемое строковое представление CVProfiler должно вернуть строку с нужным кодом.
-
-# Пример использования:
-
-# cv1 = CVProfiler('Иванов Иван Иванович', 26, 'художник-фрилансер', 'ivv@abc.de')\
-          # .add_education('Архитектурная Академия', 'Компьютерный дизайн', 2019)
-          # .add_project('Разработка логотипа для компании по производству снеков', path_to_image)\
-          # .add_project('UI разработка для интернет-магазина для восковых дел мастеров', path_to_image, path_to_image)\
-          # .add_contact(devianart='ivovuvan_in_art')\
-          # .add_contact(telegram='@ivovuvan')\
-          # .build()
-# print(cv1)
-    
-    
-# <html>
-    # <head>
-        # <title>Иван: портфолио</title>
-    # </head>
-    # <body>
-        # <div ...>
-            # <h2>Обо мне</h2>
-            # <p ...>...</p>
-            # ...
-        # </div>
-        # ...
-        # <div ...>
-            # <h2>Образование</h2>
-            # <ul ...>
-                # <li>
-                    # <p ...>...</p>
-                # </li>
-            # </ul>
-            # ...
-        # </div>
-        # ...
-    # </body>
-# </html>
-
+"""HTML - портфолио человека"""
 
 from htmlbuilder import HTMLTag, HTMLBuilder 
-from datetime import date
 from typing import Self
-from abc import ABC, abstractmethod
 from dataclasses import dataclass
-
 
 
 class About(dict):
@@ -96,7 +39,7 @@ class Study:
     institution: str = None
     specialization: str = None
     graduation: int = None
-
+    
 
 @dataclass
 class Project:
@@ -107,7 +50,7 @@ class Project:
     :param link: web-ссылка на проект
     """
     name: str = None
-    images: list[str] = None
+    images: tuple[str, ...] = None
     link: str = None
     
 
@@ -129,6 +72,7 @@ class HTMLProfile:
         """Добавить(изменить) запись в разделе о себе."""
         self.about[field_name] = field_value
 
+    # kwargs - не реализовано
     def new_contact(self, field_name: str, field_value: str) -> None:
         """Добавить(изменить) запись в разделе контакты."""
         self.contacts[field_name] = field_value
@@ -141,12 +85,12 @@ class HTMLProfile:
         study.graduation = graduation
         self.education.append(study)
 
-    def new_project(self, name: str, link: str = None, *images: list[str]) -> None:
+    def new_project(self, name: str, link: str = None, *images: tuple[str, ...]) -> None:
         """Добавляет в раздел проектов проект."""
         project = Project()
         project.name = name
         project.link = link
-        project.images = [images]
+        project.images = images
         self.projects.append(project)
 
     @staticmethod
@@ -157,6 +101,63 @@ class HTMLProfile:
     def edit(self: Self) -> 'CVProfiler':
         """Возвращает строитель класса передавая ему себя."""
         return CVProfiler(self)
+
+    def __str__(self):
+        html = HTMLTag.create('html')
+        
+        # head
+        html = html.nested('head')\
+            .sibling('title', self.about['full_name'])\
+            .closest()
+            
+        # body
+        html = html.nested('body')\
+            .nested('header')\
+            .sibling('h1', f"Резюме: {self.about['full_name']}")\
+            .closest()\
+            .nested('main')
+            
+        # about me
+        html = html.nested('section')\
+            .sibling('h2', 'Обо мне')\
+            .nested('div')\
+            .sibling('p', f"ФИО: {self.about['full_name']}")\
+            .sibling('p', f"Возраст: {self.about['age']}")\
+            .sibling('p', f"Сфера деятельности: {self.about['employment']}")\
+            .closest()
+        
+        # study
+        html = html.closest()\
+            .nested('section')\
+            .sibling('h2', 'Образование')\
+            .nested('div')
+        for study in self.education:
+            html.sibling('p', f"Учебное заведение: {study.institution}")
+        
+        # projects
+        html = html.closest()\
+            .closest()\
+            .nested('section')\
+            .sibling('h2', 'Проекты')\
+            .nested('div')
+        for project in self.projects:
+            html.sibling('p', f"Проект: {project.name} {project.link} [{' '.join(project.images)}]")
+        
+        # contacts
+        html = html.closest()\
+            .closest()\
+            .nested('section')\
+            .sibling('h2', 'Контакты')\
+            .nested('div')
+        for key, value in self.contacts.items():
+            html.nested('div')\
+            .sibling('span', f"{key}")\
+            .sibling('span', f"{value}")\
+            .closest()
+            
+        html = html.build()
+        return f"{html}"
+
     
 class CVProfiler:
     
@@ -192,56 +193,73 @@ class CVProfiler:
 
     def build(self) -> HTMLProfile:
         return self.root
-    
 
-# >>> prof = HTMLProfile.create('Иванов Иван Иванович')\
-# ... .add_contact('mobile', '+79050000000')\
-# ... .add_contact('whatsapp', '+79050000000')\
-# ... .add_education('university', 'special', 2010)\
-# ... .add_education('university2', 'special2', 2016)\
-# ... .add_project('project1', 'link1', 'img', 'img')\
-# ... .add_project('project2', 'link2', 'img', 'img')\
+
+
+# >>> ivanov = HTMLProfile.create('Иванов Иван Иванович')\
+# ... .add_contact('mobile', '+79600000000')\
+# ... .add_contact('telegram', '@ivanov')\
+# ... .add_contact('email', 'ivanov@ivanov.iv')\
+# ... .add_about('age', 30)\
+# ... .add_about('employment', 'художник-фрилансер')\
+# ... .add_education('Архитектурная академия', 'Компьютерный дизайн', 2010)\
+# ... .add_education('Строительный техникум', 'Инженер-сметчик', 2016)\
+# ... .add_project('UI разработка интернет-магазина', 'link1', 'img1', 'img2')\
 # ... .build()
 # >>>
+# >>> print(ivanov)
+# <html>
+  # <head>
+    # <title>Иванов Иван Иванович</title>
+  # </head>
+  # <body>
+    # <header>
+      # <h1>Резюме: Иванов Иван Иванович</h1>
+    # </header>
+    # <main>
+      # <section>
+        # <h2>Обо мне</h2>
+        # <div>
+          # <p>ФИО: Иванов Иван Иванович</p>
+          # <p>Возраст: 30</p>
+          # <p>Сфера деятельности: художник-фрилансер</p>
+        # </div>
+      # </section>
+      # <section>
+        # <h2>Образование</h2>
+        # <div>
+          # <p>Учебное заведение: Архитектурная академия</p>
+          # <p>Учебное заведение: Строительный техникум</p>
+        # </div>
+      # </section>
+      # <section>
+        # <h2>Проекты</h2>
+        # <div>
+          # <p>Проект: UI разработка интернет-магазина link1 [img1 img2]</p>
+        # </div>
+      # </section>
+      # <section>
+        # <h2>Контакты</h2>
+        # <div>
+          # <div>
+            # <span>mobile</span>
+            # <span>+79600000000</span>
+          # </div>
+          # <div>
+            # <span>email</span>
+            # <span>ivanov@ivanov.iv</span>
+          # </div>
+          # <div>
+            # <span>web</span>
+            # <span>None</span>
+          # </div>
+          # <div>
+            # <span>telegram</span>
+            # <span>@ivanov</span>
+          # </div>
+        # </div>
+      # </section>
+    # </main>
+  # </body>
+# </html>
 # >>>
-# >>>
-# >>> for item in prof.__dict__.items():
-# ...     print(item)
-# ...
-# ('about', {'full_name': 'Иванов Иван Иванович', 'age': None, 'employment': None, 'picture': None})
-# ('education', [Study(institution='university', specialization='special', graduation=2010), Study(institution='university2', specialization='special2', graduation=2016)])
-# ('projects', [Project(name='project1', images=[('img', 'img')], link='link1'), Project(name='project2', images=[('img', 'img')], link='link2')])
-# ('contacts', {'mobile': '+79050000000', 'email': None, 'web': None, 'telegram': None, 'whatsapp': '+79050000000'})
-# >>>
-# >>>
-# >>>
-# >>> prof.edit().add_about('age', 30).build()
-# <__main__.HTMLProfile object at 0x000001E3E05D54D0>
-# >>> for item in prof.__dict__.items():
-# ...     print(item)
-# ...
-# ('about', {'full_name': 'Иванов Иван Иванович', 'age': 30, 'employment': None, 'picture': None})
-# ('education', [Study(institution='university', specialization='special', graduation=2010), Study(institution='university2', specialization='special2', graduation=2016)])
-# ('projects', [Project(name='project1', images=[('img', 'img')], link='link1'), Project(name='project2', images=[('img', 'img')], link='link2')])
-# ('contacts', {'mobile': '+79050000000', 'email': None, 'web': None, 'telegram': None, 'whatsapp': '+79050000000'})
-# >>>
-# >>>
-# >>>
-# >>> prof = CVProfiler('Иванов Иван Иванович')\
-# ... .add_contact('mobile', '+79050000000')\
-# ... .add_contact('whatsapp', '+79050000000')\
-# ... .add_education('university', 'special', 2010)\
-# ... .add_education('university2', 'special2', 2016)\
-# ... .add_project('project1', 'link1', 'img', 'img')\
-# ... .add_project('project2', 'link2', 'img', 'img')\
-# ... .build()
-# >>>
-# >>>
-# >>>
-# >>> for item in prof.__dict__.items():
-# ...     print(item)
-# ...
-# ('about', {'full_name': 'Иванов Иван Иванович', 'age': None, 'employment': None, 'picture': None})
-# ('education', [Study(institution='university', specialization='special', graduation=2010), Study(institution='university2', specialization='special2', graduation=2016)])
-# ('projects', [Project(name='project1', images=[('img', 'img')], link='link1'), Project(name='project2', images=[('img', 'img')], link='link2')])
-# ('contacts', {'mobile': '+79050000000', 'email': None, 'web': None, 'telegram': None, 'whatsapp': '+79050000000'})

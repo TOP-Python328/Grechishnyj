@@ -27,7 +27,7 @@ class HTMLTag:
         margin = ' ' * indent_level * self.default_indent_spaces
         eol = ''
         attrs = ' '.join(['='.join((f"{key}", f'"{value}"')) for key, value in self.attrs.items()])
-        result = f"{margin}<{self.name} {attrs}>{self.value}"
+        result = f"{margin}<{self.name}{attrs}>{self.value}"
         if self.__nested:
             for tag in self.__nested:
                 result += '\n' + tag.__str(indent_level+1)

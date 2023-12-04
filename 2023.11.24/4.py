@@ -4,8 +4,6 @@ from typing import Self
 from sys import path
 
 
-
-
 if os_name == 'nt':
     PATH_SEP = '\\'
 else:

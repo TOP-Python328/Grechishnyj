@@ -60,7 +60,6 @@ class Logger(dict):
     def del_log(self):
         last_log = self['completed'].pop()
         self['cancelled'].append(last_log)
-
     
     
 class TCCommand:
@@ -84,22 +83,7 @@ class TCCommand:
         for i in range(count):
             self.logger.del_log()
 
-    def again(self, count: int = 1) -> None:
-        """Повторное выполнение операции"""
-        listener = Listener.code()
-        cancelled = self.logger['cancelled']
-        if not cancelled:
-            return
-        length = len(cancelled)
-        if count > length:
-            count = length
-
-        for i in range(count):
-            operation_name = cancelled[0]
-            print[operation_name]
-            
-        
-        
+ 
 testcase = TestCase()
 command = TCCommand(testcase)
 command.save(testcase.print_nums)

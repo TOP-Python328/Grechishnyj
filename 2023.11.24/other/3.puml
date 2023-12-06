@@ -1,0 +1,67 @@
+@startuml
+
+scale 1.5
+
+title CVProfiler (Builder)
+
+hide class empty members
+
+class Contact << dataclass >>{
+    +mobile: <i>str</i> 
+    +email: <i>str</i>
+    +web: <i>str</i>
+    +telegram: <i>str</i>
+}
+
+class Study << dataclass >>{
+    +institution: <i>str</i> 
+    +specialization: <i>str</i> 
+    +graduation: <i>int</i> 
+}
+
+class Project << dataclass >>{
+    +name: <i>str</i> 
+    +images: <i>tuple[str, ...]</i>
+    +link: <i>str</i> 
+}   
+
+class HTMLProfile{
+    --instance--
+    +education: list[Study]
+    +projects: list[Project]
+    +contacts: Contact
+    --methods--
+    +new_contact() -> None
+    +new_education() -> None
+    +new_project() -> None
+    +{static}create() -> CVProfiler
+    +edit() -> CVProfiler
+    --special--
+    __init__() -> <i>None</i>
+    __str__() -> <i>str</i>
+}
+    
+class CVProfiler{
+    --instance--
+    +root: HTMLProfile | <i>str</i>
+    +age: <i>int</i>
+    +employment: <i>str</i>
+    +email: <i>str</i>
+    --methods--
+    +add_about() -> Self
+    +add_contact() -> Self
+    +def add_education() -> Self
+    +add_project() -> Self
+    +build() -> HTMLProfile 
+    --special--
+    __init__() -> <i>None</i>
+}
+
+HTMLProfile o-- CVProfiler
+CVProfiler o-left- HTMLProfile
+
+HTMLProfile o-- Contact
+HTMLProfile o-- Study
+HTMLProfile o-- Project
+
+@enduml

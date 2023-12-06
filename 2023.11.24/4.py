@@ -39,7 +39,6 @@ class Folder(list):
         """Добавить(переместить) в каталог элемент (файл либо каталог)"""
         if hasattr(other, 'folder'):
             other.folder.remove(other)
-        other.folder = None
         other.dir_path = self.ls()
         other.folder = self
         self.append(other)

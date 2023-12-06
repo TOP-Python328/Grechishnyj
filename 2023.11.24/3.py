@@ -5,27 +5,13 @@ from typing import Self
 from dataclasses import dataclass
 
 
-class About(dict):
-    """Описывает раздел о себе.
-    
-    :param full_name: фио - полное имя
-    :param age: возраст
-    :param employment: сфера деятельности
-    """
-    def __init__(self, full_name: str = None, age: int = None, employment: str = None):
-        self['full_name'] = full_name
-        self['age'] = age
-        self['employment'] = employment
-        self['picture'] = None
-
-
-class Contact(dict):
+@dataclass
+class Contact:
     """Описывает раздел контактов."""
-    def __init__(self, email: str = None, mobile: str = None, web: str = None, telegram: str = None):
-        self['mobile'] = mobile
-        self['email'] = email
-        self['web'] = web
-        self['telegram'] = telegram 
+    mobile: str = None
+    email: str = None
+    web: str = None
+    telegram: str = None 
 
 
 @dataclass
@@ -63,20 +49,21 @@ class HTMLProfile:
             employment: str = None, 
             email: str = None
     ):
-        self.about: About = About(full_name, age, employment)
+        # self.about: About = About(full_name, age, employment)
+        self.full_name: str = full_name
+        self.age: int = age
+        self.employment: str = employment
+        self.picture: str = None
         self.education: list[Study] = []
         self.projects: list[Project] = []
-        self.contacts: Contact = Contact(email)   
+        self.contacts: Contact = Contact() 
+        self.contacts.email = email
 
-    def new_about(self, field_name: str, field_value: str) -> None:
-        """Добавить(изменить) запись в разделе о себе."""
-        self.about[field_name] = field_value
-
-    # kwargs - не реализовано
-    def new_contact(self, field_name: str, field_value: str) -> None:
+    def new_contact(self, **kwargs) -> None:
         """Добавить(изменить) запись в разделе контакты."""
-        self.contacts[field_name] = field_value
-
+        for key, value in kwargs.items():
+            setattr(self.contacts, key, value)
+        
     def new_education(self, institution: str, specialization: str, graduation: int) -> None:
         """Добавляет в раздел образования учебное заведение."""
         study = Study()
@@ -94,12 +81,13 @@ class HTMLProfile:
         self.projects.append(project)
 
     @staticmethod
-    def create(name: str) -> 'CVProfiler':
+    def create(full_name: str, age: int = None, employment: str = None, email: str = None) -> 'CVProfiler':
         """Возвращает строитель класса для создания нового экземпляра"""
-        return CVProfiler(name)
+        instance_profile = HTMLProfile(full_name, age, employment, email)
+        return CVProfiler(instance_profile)
  
     def edit(self: Self) -> 'CVProfiler':
-        """Возвращает строитель класса передавая ему себя."""
+        """Возвращает строитель класса передавая ему себя для редактирования"""
         return CVProfiler(self)
 
     def __str__(self):
@@ -107,13 +95,13 @@ class HTMLProfile:
         
         # head
         html = html.nested('head')\
-            .sibling('title', self.about['full_name'])\
+            .sibling('title', self.full_name)\
             .closest()
             
         # body
         html = html.nested('body')\
             .nested('header')\
-            .sibling('h1', f"Резюме: {self.about['full_name']}")\
+            .sibling('h1', f"Резюме: {self.full_name}")\
             .closest()\
             .nested('main')
             
@@ -121,9 +109,9 @@ class HTMLProfile:
         html = html.nested('section')\
             .sibling('h2', 'Обо мне')\
             .nested('div')\
-            .sibling('p', f"ФИО: {self.about['full_name']}")\
-            .sibling('p', f"Возраст: {self.about['age']}")\
-            .sibling('p', f"Сфера деятельности: {self.about['employment']}")\
+            .sibling('p', f"ФИО: {self.full_name}")\
+            .sibling('p', f"Возраст: {self.age}")\
+            .sibling('p', f"Сфера деятельности: {self.employment}")\
             .closest()
         
         # study
@@ -149,7 +137,7 @@ class HTMLProfile:
             .nested('section')\
             .sibling('h2', 'Контакты')\
             .nested('div')
-        for key, value in self.contacts.items():
+        for key, value in self.contacts.__dict__.items():
             html.nested('div')\
             .sibling('span', f"{key}")\
             .sibling('span', f"{value}")\
@@ -160,7 +148,7 @@ class HTMLProfile:
 
     
 class CVProfiler:
-    
+    """ Строитель для класса HTMLProfile - портфолио"""
     def __init__(
             self, 
             root: HTMLProfile | str, 
@@ -175,12 +163,8 @@ class CVProfiler:
         else:
             raise TypeError('use HTMLProfile or str instance for root parameter')
 
-    def add_about(self, name: str, value: str) -> Self:
-        self.root.new_about(name, value)
-        return self
-
-    def add_contact(self, name: str, value: str) -> Self:
-        self.root.new_contact(name, value)
+    def add_contact(self, **kwargs) -> Self:
+        self.root.new_contact(**kwargs)
         return self
 
     def add_education(self, institution: str, specialization: str, graduation: int) -> Self:
@@ -195,16 +179,13 @@ class CVProfiler:
         return self.root
 
 
-
-# >>> ivanov = HTMLProfile.create('Иванов Иван Иванович')\
-# ... .add_contact('mobile', '+79600000000')\
-# ... .add_contact('telegram', '@ivanov')\
-# ... .add_contact('email', 'ivanov@ivanov.iv')\
-# ... .add_about('age', 30)\
-# ... .add_about('employment', 'художник-фрилансер')\
+# >>> ivanov = HTMLProfile.create('Иванов Иван Иванович', 30, 'художник')\
+# ... .add_contact(mobile='+79600000000', vKontakte='ivanov.vk', github='@ivangithub', email='iii@gmail.com')\
 # ... .add_education('Архитектурная академия', 'Компьютерный дизайн', 2010)\
-# ... .add_education('Строительный техникум', 'Инженер-сметчик', 2016)\
-# ... .add_project('UI разработка интернет-магазина', 'link1', 'img1', 'img2')\
+# ... .add_education('Строительный техникум', 'Инженер-конструктор', 2016)\
+# ... .add_project('Разработка архитектурной концепции миктрорайона', 'link1', 'img1', 'img2')\
+# ... .add_project('Разработка проекта реставрации здания', 'link2', 'img1', 'img2')\
+# ... .add_project('Организация выставки современных архитектурных направлений', 'link3', 'img1', 'img2')\
 # ... .build()
 # >>>
 # >>> print(ivanov)
@@ -222,7 +203,7 @@ class CVProfiler:
         # <div>
           # <p>ФИО: Иванов Иван Иванович</p>
           # <p>Возраст: 30</p>
-          # <p>Сфера деятельности: художник-фрилансер</p>
+          # <p>Сфера деятельности: художник</p>
         # </div>
       # </section>
       # <section>
@@ -235,7 +216,9 @@ class CVProfiler:
       # <section>
         # <h2>Проекты</h2>
         # <div>
-          # <p>Проект: UI разработка интернет-магазина link1 [img1 img2]</p>
+          # <p>Проект: Разработка архитектурной концепции миктрорайона link1 [img1 img2]</p>
+          # <p>Проект: Разработка проекта реставрации здания link2 [img1 img2]</p>
+          # <p>Проект: Организация выставки современных архитектурных направлений link3 [img1 img2]</p>
         # </div>
       # </section>
       # <section>
@@ -247,7 +230,7 @@ class CVProfiler:
           # </div>
           # <div>
             # <span>email</span>
-            # <span>ivanov@ivanov.iv</span>
+            # <span>iii@gmail.com</span>
           # </div>
           # <div>
             # <span>web</span>
@@ -255,7 +238,15 @@ class CVProfiler:
           # </div>
           # <div>
             # <span>telegram</span>
-            # <span>@ivanov</span>
+            # <span>None</span>
+          # </div>
+          # <div>
+            # <span>vKontakte</span>
+            # <span>ivanov.vk</span>
+          # </div>
+          # <div>
+            # <span>github</span>
+            # <span>@ivangithub</span>
           # </div>
         # </div>
       # </section>

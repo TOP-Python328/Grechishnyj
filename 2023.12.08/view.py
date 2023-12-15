@@ -23,7 +23,7 @@ class CLI:
 
     @staticmethod
     def success_save() -> None:
-        """Вывод в stdout сообщения о некорректном email."""
+        """Вывод в stdout сообщения об успешном сохранении."""
         print("\nEmail успешно сохранен в файл!")
 
     @staticmethod

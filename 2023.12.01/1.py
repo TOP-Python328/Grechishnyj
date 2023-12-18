@@ -131,7 +131,7 @@ if __name__ == '__main__':
     game.make_move(wr, 'a3')
     game.make_move(wr, 'a1')
 
-    game.back_to_move(5)
+    game.back_to_move(10)
     print(game.report)
 
 
